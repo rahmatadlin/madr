@@ -4,7 +4,27 @@ Base URL: `http://localhost:8080/api/v1`
 
 ## Authentication
 
-> **Note**: Authentication akan diimplementasikan pada tahap selanjutnya. Saat ini endpoint admin belum dilindungi.
+API menggunakan JWT (JSON Web Token) untuk authentication. Terdapat dua jenis token:
+- **Access Token**: Token untuk mengakses protected endpoints (expires in 15 minutes by default)
+- **Refresh Token**: Token untuk memperbarui access token (expires in 7 days by default)
+
+### Authentication Flow
+
+1. **Login** → Dapatkan access token dan refresh token
+2. **Gunakan Access Token** → Setiap request ke protected endpoint harus menyertakan header: `Authorization: Bearer <access_token>`
+3. **Refresh Token** → Ketika access token expired, gunakan refresh token untuk mendapatkan access token baru
+4. **Logout** → Revoke refresh token untuk logout
+
+### Default Admin Credentials
+
+Setelah pertama kali menjalankan aplikasi, default admin akan dibuat secara otomatis:
+- **Username**: `admin`
+- **Password**: `admin123`
+- **Email**: `admin@madr.local`
+
+> **⚠️ PENTING**: Ubah password default admin setelah pertama kali login!
+
+---
 
 ## Health Check
 
@@ -358,10 +378,317 @@ CORS dikonfigurasi untuk mengizinkan request dari origins yang ditentukan. Defau
 
 ---
 
+## Authentication Endpoints
+
+### Register User
+
+Mendaftarkan user baru.
+
+```http
+POST /auth/register
+```
+
+**Request Body:**
+```json
+{
+  "username": "newuser",
+  "email": "user@example.com",
+  "password": "password123",
+  "name": "New User",
+  "role": "user"
+}
+```
+
+**Fields:**
+- `username` (required, min: 3, max: 100) - Username unik
+- `email` (required, valid email) - Email unik
+- `password` (required, min: 6) - Password
+- `name` (optional, max: 255) - Nama lengkap
+- `role` (optional) - Role user: "user" (default) atau "admin"
+
+**Response (201):**
+```json
+{
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "id": 1,
+      "username": "newuser",
+      "email": "user@example.com",
+      "name": "New User",
+      "role": "user",
+      "is_active": true,
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    }
+  }
+}
+```
+
+**Error Response (409):**
+```json
+{
+  "error": "username already exists"
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "newuser",
+    "email": "user@example.com",
+    "password": "password123",
+    "name": "New User"
+  }'
+```
+
+---
+
+### Login
+
+Login dan mendapatkan access token serta refresh token.
+
+```http
+POST /auth/login
+```
+
+**Request Body:**
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+**Fields:**
+- `username` (required) - Username atau email
+- `password` (required) - Password
+
+**Response (200):**
+```json
+{
+  "message": "Login successful",
+  "data": {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "token_type": "Bearer",
+    "expires_in": 900,
+    "user": {
+      "id": 1,
+      "username": "admin",
+      "email": "admin@madr.local",
+      "name": "Default Admin",
+      "role": "admin",
+      "is_active": true,
+      "last_login": "2024-01-15T10:00:00Z"
+    }
+  }
+}
+```
+
+**Error Response (401):**
+```json
+{
+  "error": "Invalid credentials"
+}
+```
+
+**Error Response (403):**
+```json
+{
+  "error": "Account is inactive"
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "admin123"
+  }'
+```
+
+---
+
+### Refresh Token
+
+Memperbarui access token menggunakan refresh token.
+
+```http
+POST /auth/refresh
+```
+
+**Request Body:**
+```json
+{
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Fields:**
+- `refresh_token` (required) - Refresh token yang valid
+
+**Response (200):**
+```json
+{
+  "message": "Token refreshed successfully",
+  "data": {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "token_type": "Bearer",
+    "expires_in": 900
+  }
+}
+```
+
+**Error Response (401):**
+```json
+{
+  "error": "invalid refresh token"
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "your-refresh-token-here"
+  }'
+```
+
+---
+
+### Get Current User (Protected)
+
+Mendapatkan informasi user yang sedang login.
+
+```http
+GET /auth/me
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200):**
+```json
+{
+  "data": {
+    "user": {
+      "id": 1,
+      "username": "admin",
+      "email": "admin@madr.local",
+      "name": "Default Admin",
+      "role": "admin",
+      "is_active": true,
+      "last_login": "2024-01-15T10:00:00Z",
+      "created_at": "2024-01-15T09:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    }
+  }
+}
+```
+
+**Error Response (401):**
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+**Example:**
+```bash
+curl http://localhost:8080/api/v1/auth/me \
+  -H "Authorization: Bearer your-access-token-here"
+```
+
+---
+
+### Logout
+
+Logout dan revoke refresh token.
+
+```http
+POST /auth/logout
+```
+
+**Request Body:**
+```json
+{
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Fields:**
+- `refresh_token` (required) - Refresh token yang akan di-revoke
+
+**Response (200):**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/logout \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "your-refresh-token-here"
+  }'
+```
+
+---
+
+### Logout All Devices (Protected)
+
+Logout dari semua device dengan me-revoke semua refresh token user.
+
+```http
+POST /auth/logout-all
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200):**
+```json
+{
+  "message": "Logged out from all devices successfully"
+}
+```
+
+**Error Response (401):**
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/logout-all \
+  -H "Authorization: Bearer your-access-token-here"
+```
+
+---
+
 ## Notes
 
 - Semua timestamp menggunakan format ISO 8601 (UTC)
 - Pagination menggunakan limit/offset pattern
 - Soft delete digunakan untuk semua resources
-- Admin endpoints akan dilindungi dengan JWT authentication pada tahap selanjutnya
+- **Admin endpoints sekarang dilindungi dengan JWT authentication**
+- Access token expired dalam 15 menit (default)
+- Refresh token expired dalam 7 hari (default)
+- Refresh token disimpan di database untuk mendukung revocation
+- Password di-hash menggunakan bcrypt
 
