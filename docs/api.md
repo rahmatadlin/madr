@@ -329,6 +329,574 @@ curl -X DELETE http://localhost:8080/api/v1/admin/announcements/1
 
 ---
 
+## Events
+
+### Get All Events (Public)
+
+Mengambil daftar semua event yang tersedia.
+
+```http
+GET /events
+```
+
+**Query Parameters:**
+- `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
+- `offset` (optional, default: 0) - Offset untuk pagination
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Sholat Jumat Berjamaah",
+      "description": "Sholat Jumat akan dilaksanakan di masjid utama",
+      "date": "2024-01-20T12:00:00Z",
+      "location": "Masjid Al-Madr",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "total": 1,
+  "limit": 10,
+  "offset": 0,
+  "total_pages": 1
+}
+```
+
+**Example:**
+```bash
+curl http://localhost:8080/api/v1/events?limit=10&offset=0
+```
+
+---
+
+### Get Event by ID (Public)
+
+Mengambil detail event berdasarkan ID.
+
+```http
+GET /events/:id
+```
+
+**Path Parameters:**
+- `id` (required) - ID event
+
+**Response:**
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "Sholat Jumat Berjamaah",
+    "description": "Sholat Jumat akan dilaksanakan di masjid utama",
+    "date": "2024-01-20T12:00:00Z",
+    "location": "Masjid Al-Madr",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+```bash
+curl http://localhost:8080/api/v1/events/1
+```
+
+---
+
+### Create Event (Admin - Protected)
+
+Membuat event baru.
+
+```http
+POST /admin/events
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Request Body:**
+```json
+{
+  "title": "Sholat Jumat Berjamaah",
+  "description": "Sholat Jumat akan dilaksanakan di masjid utama",
+  "date": "2024-01-20T12:00:00Z",
+  "location": "Masjid Al-Madr"
+}
+```
+
+**Fields:**
+- `title` (required, min: 3, max: 255) - Judul event
+- `description` (optional) - Deskripsi event
+- `date` (required) - Tanggal dan waktu event (ISO 8601 format)
+- `location` (optional, max: 255) - Lokasi event
+
+**Response (201):**
+```json
+{
+  "message": "Event created successfully",
+  "data": {
+    "id": 1,
+    "title": "Sholat Jumat Berjamaah",
+    "description": "Sholat Jumat akan dilaksanakan di masjid utama",
+    "date": "2024-01-20T12:00:00Z",
+    "location": "Masjid Al-Madr",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/events \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Sholat Jumat Berjamaah",
+    "description": "Sholat Jumat akan dilaksanakan di masjid utama",
+    "date": "2024-01-20T12:00:00Z",
+    "location": "Masjid Al-Madr"
+  }'
+```
+
+---
+
+### Update Event (Admin - Protected)
+
+Mengupdate event yang sudah ada.
+
+```http
+PUT /admin/events/:id
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Path Parameters:**
+- `id` (required) - ID event
+
+**Request Body:**
+```json
+{
+  "title": "Sholat Jumat Berjamaah (Updated)",
+  "description": "Updated description",
+  "date": "2024-01-20T13:00:00Z",
+  "location": "Masjid Al-Madr - Ruang Utama"
+}
+```
+
+**Fields (all optional):**
+- `title` - Judul event
+- `description` - Deskripsi event
+- `date` - Tanggal dan waktu event
+- `location` - Lokasi event
+
+**Response (200):**
+```json
+{
+  "message": "Event updated successfully",
+  "data": {
+    "id": 1,
+    "title": "Sholat Jumat Berjamaah (Updated)",
+    "description": "Updated description",
+    "date": "2024-01-20T13:00:00Z",
+    "location": "Masjid Al-Madr - Ruang Utama",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+**Example:**
+```bash
+curl -X PUT http://localhost:8080/api/v1/admin/events/1 \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Sholat Jumat Berjamaah (Updated)",
+    "location": "Masjid Al-Madr - Ruang Utama"
+  }'
+```
+
+---
+
+### Delete Event (Admin - Protected)
+
+Menghapus event (soft delete).
+
+```http
+DELETE /admin/events/:id
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Path Parameters:**
+- `id` (required) - ID event
+
+**Response (200):**
+```json
+{
+  "message": "Event deleted successfully"
+}
+```
+
+**Example:**
+```bash
+curl -X DELETE http://localhost:8080/api/v1/admin/events/1 \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+## Gallery
+
+### Get All Gallery Items (Public)
+
+Mengambil daftar semua item galeri.
+
+```http
+GET /gallery
+```
+
+**Query Parameters:**
+- `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
+- `offset` (optional, default: 0) - Offset untuk pagination
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Foto Kegiatan Sholat Jumat",
+      "image_url": "uploads/gallery/foto-jumat-2024.jpg",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "total": 1,
+  "limit": 10,
+  "offset": 0,
+  "total_pages": 1
+}
+```
+
+**Example:**
+```bash
+curl http://localhost:8080/api/v1/gallery?limit=10&offset=0
+```
+
+---
+
+### Create Gallery Item (Admin - Protected)
+
+Menambahkan item baru ke galeri.
+
+```http
+POST /admin/gallery
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Request Body:**
+```json
+{
+  "title": "Foto Kegiatan Sholat Jumat",
+  "image_url": "uploads/gallery/foto-jumat-2024.jpg"
+}
+```
+
+**Fields:**
+- `title` (required, min: 3, max: 255) - Judul foto
+- `image_url` (required) - URL atau path ke file gambar
+
+**Response (201):**
+```json
+{
+  "message": "Gallery item created successfully",
+  "data": {
+    "id": 1,
+    "title": "Foto Kegiatan Sholat Jumat",
+    "image_url": "uploads/gallery/foto-jumat-2024.jpg",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/gallery \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Foto Kegiatan Sholat Jumat",
+    "image_url": "uploads/gallery/foto-jumat-2024.jpg"
+  }'
+```
+
+---
+
+### Delete Gallery Item (Admin - Protected)
+
+Menghapus item dari galeri (soft delete).
+
+```http
+DELETE /admin/gallery/:id
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Path Parameters:**
+- `id` (required) - ID gallery item
+
+**Response (200):**
+```json
+{
+  "message": "Gallery item deleted successfully"
+}
+```
+
+**Example:**
+```bash
+curl -X DELETE http://localhost:8080/api/v1/admin/gallery/1 \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+## Banners
+
+### Get All Banners (Public)
+
+Mengambil daftar semua banner.
+
+```http
+GET /banners
+```
+
+**Query Parameters:**
+- `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
+- `offset` (optional, default: 0) - Offset untuk pagination
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Banner Sholat Jumat",
+      "media_url": "uploads/banners/banner-jumat.jpg",
+      "type": "image",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "total": 1,
+  "limit": 10,
+  "offset": 0,
+  "total_pages": 1
+}
+```
+
+**Example:**
+```bash
+curl http://localhost:8080/api/v1/banners?limit=10&offset=0
+```
+
+---
+
+### Get Banner by ID (Public)
+
+Mengambil detail banner berdasarkan ID.
+
+```http
+GET /banners/:id
+```
+
+**Path Parameters:**
+- `id` (required) - ID banner
+
+**Response:**
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "Banner Sholat Jumat",
+    "media_url": "uploads/banners/banner-jumat.jpg",
+    "type": "image",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+```bash
+curl http://localhost:8080/api/v1/banners/1
+```
+
+---
+
+### Create Banner (Admin - Protected)
+
+Membuat banner baru.
+
+```http
+POST /admin/banners
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Request Body:**
+```json
+{
+  "title": "Banner Sholat Jumat",
+  "media_url": "uploads/banners/banner-jumat.jpg",
+  "type": "image"
+}
+```
+
+**Fields:**
+- `title` (required, min: 3, max: 255) - Judul banner
+- `media_url` (required) - URL atau path ke file media
+- `type` (required) - Tipe media: `"image"` atau `"video"`
+
+**Response (201):**
+```json
+{
+  "message": "Banner created successfully",
+  "data": {
+    "id": 1,
+    "title": "Banner Sholat Jumat",
+    "media_url": "uploads/banners/banner-jumat.jpg",
+    "type": "image",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/banners \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Banner Sholat Jumat",
+    "media_url": "uploads/banners/banner-jumat.jpg",
+    "type": "image"
+  }'
+```
+
+---
+
+### Update Banner (Admin - Protected)
+
+Mengupdate banner yang sudah ada.
+
+```http
+PUT /admin/banners/:id
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Path Parameters:**
+- `id` (required) - ID banner
+
+**Request Body:**
+```json
+{
+  "title": "Banner Sholat Jumat (Updated)",
+  "media_url": "uploads/banners/banner-jumat-new.jpg",
+  "type": "image"
+}
+```
+
+**Fields (all optional):**
+- `title` - Judul banner
+- `media_url` - URL atau path ke file media
+- `type` - Tipe media: `"image"` atau `"video"`
+
+**Response (200):**
+```json
+{
+  "message": "Banner updated successfully",
+  "data": {
+    "id": 1,
+    "title": "Banner Sholat Jumat (Updated)",
+    "media_url": "uploads/banners/banner-jumat-new.jpg",
+    "type": "image",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+**Example:**
+```bash
+curl -X PUT http://localhost:8080/api/v1/admin/banners/1 \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Banner Sholat Jumat (Updated)",
+    "type": "video"
+  }'
+```
+
+---
+
+### Delete Banner (Admin - Protected)
+
+Menghapus banner (soft delete).
+
+```http
+DELETE /admin/banners/:id
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Path Parameters:**
+- `id` (required) - ID banner
+
+**Response (200):**
+```json
+{
+  "message": "Banner deleted successfully"
+}
+```
+
+**Example:**
+```bash
+curl -X DELETE http://localhost:8080/api/v1/admin/banners/1 \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
 ## Error Responses
 
 ### 400 Bad Request
@@ -691,4 +1259,92 @@ curl -X POST http://localhost:8080/api/v1/auth/logout-all \
 - Refresh token expired dalam 7 hari (default)
 - Refresh token disimpan di database untuk mendukung revocation
 - Password di-hash menggunakan bcrypt
+
+---
+
+## Summary of Endpoints
+
+### Public Endpoints (No Authentication Required)
+- `GET /announcements/published` - Get published announcements
+- `GET /announcements/:id` - Get announcement by ID
+- `GET /events` - Get all events
+- `GET /events/:id` - Get event by ID
+- `GET /gallery` - Get all gallery items
+- `GET /banners` - Get all banners
+- `GET /banners/:id` - Get banner by ID
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - Login
+- `POST /auth/refresh` - Refresh access token
+- `POST /auth/logout` - Logout
+
+### Protected Endpoints (Require JWT Authentication)
+- `GET /auth/me` - Get current user info
+- `POST /auth/logout-all` - Logout from all devices
+
+### Admin Endpoints (Require JWT Authentication + Admin Role)
+- `POST /admin/announcements` - Create announcement
+- `GET /admin/announcements` - Get all announcements (including unpublished)
+- `PUT /admin/announcements/:id` - Update announcement
+- `DELETE /admin/announcements/:id` - Delete announcement
+- `POST /admin/events` - Create event
+- `PUT /admin/events/:id` - Update event
+- `DELETE /admin/events/:id` - Delete event
+- `POST /admin/gallery` - Create gallery item
+- `DELETE /admin/gallery/:id` - Delete gallery item
+- `POST /admin/banners` - Create banner
+- `PUT /admin/banners/:id` - Update banner
+- `DELETE /admin/banners/:id` - Delete banner
+
+---
+
+## Next Improvements Suggestions
+
+### 1. File Upload Endpoint
+Implementasi endpoint untuk upload file (gambar/video) untuk Gallery dan Banner:
+- `POST /admin/upload` - Upload file dan return URL
+- Support multiple file formats (jpg, png, mp4, etc.)
+- File validation (size, type)
+- Storage di `/uploads` folder atau cloud storage
+
+### 2. Advanced Filtering & Search
+- Filter events by date range
+- Search announcements by keyword
+- Filter gallery by category/tags
+- Sort options untuk semua endpoints
+
+### 3. Donations Module
+- CRUD untuk donasi
+- Payment gateway integration
+- Donation reports & analytics
+- Recurring donations support
+
+### 4. Enhanced Features
+- Event registration/RSVP
+- Comments system untuk announcements
+- Newsletter subscription
+- Email notifications untuk events
+- SMS notifications
+
+### 5. Performance & Optimization
+- Caching untuk public endpoints (Redis)
+- Image optimization & CDN integration
+- Database indexing optimization
+- API response compression
+
+### 6. Security Enhancements
+- Rate limiting per user (not just IP)
+- API key for public integrations
+- Audit logging untuk admin actions
+- Two-factor authentication (2FA)
+
+### 7. Analytics & Reporting
+- Dashboard analytics
+- User activity tracking
+- Content performance metrics
+- Export reports (PDF/Excel)
+
+### 8. Multi-language Support
+- i18n untuk announcements & events
+- Language preference per user
+- Content translation management
 
