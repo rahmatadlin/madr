@@ -1,8 +1,6 @@
 package gallery
 
 import (
-	"errors"
-
 	"github.com/madr/backend/internal/domain/gallery"
 	"github.com/madr/backend/pkg/database"
 	"gorm.io/gorm"

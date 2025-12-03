@@ -598,7 +598,7 @@ curl http://localhost:8080/api/v1/gallery?limit=10&offset=0
 
 ### Create Gallery Item (Admin - Protected)
 
-Menambahkan item baru ke galeri.
+Menambahkan item baru ke galeri dengan file upload.
 
 ```http
 POST /admin/gallery
@@ -607,19 +607,16 @@ POST /admin/gallery
 **Headers:**
 ```
 Authorization: Bearer <access_token>
+Content-Type: multipart/form-data
 ```
 
-**Request Body:**
-```json
-{
-  "title": "Foto Kegiatan Sholat Jumat",
-  "image_url": "uploads/gallery/foto-jumat-2024.jpg"
-}
-```
-
-**Fields:**
+**Form Data:**
+- `file` (required) - File gambar (jpg, jpeg, png, webp)
 - `title` (required, min: 3, max: 255) - Judul foto
-- `image_url` (required) - URL atau path ke file gambar
+
+**File Requirements:**
+- Max size: 10MB (configurable)
+- Allowed types: image/jpeg, image/jpg, image/png, image/webp
 
 **Response (201):**
 ```json
@@ -628,22 +625,34 @@ Authorization: Bearer <access_token>
   "data": {
     "id": 1,
     "title": "Foto Kegiatan Sholat Jumat",
-    "image_url": "uploads/gallery/foto-jumat-2024.jpg",
+    "image_url": "http://localhost:8080/uploads/1705312800_abc123_foto_jumat.jpg",
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-15T10:00:00Z"
   }
 }
 ```
 
-**Example:**
+**Example with cURL:**
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/gallery \
   -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Foto Kegiatan Sholat Jumat",
-    "image_url": "uploads/gallery/foto-jumat-2024.jpg"
-  }'
+  -F "file=@/path/to/image.jpg" \
+  -F "title=Foto Kegiatan Sholat Jumat"
+```
+
+**Example with JavaScript (FormData):**
+```javascript
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+formData.append('title', 'Foto Kegiatan Sholat Jumat');
+
+fetch('http://localhost:8080/api/v1/admin/gallery', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer <access_token>'
+  },
+  body: formData
+});
 ```
 
 ---
@@ -754,7 +763,7 @@ curl http://localhost:8080/api/v1/banners/1
 
 ### Create Banner (Admin - Protected)
 
-Membuat banner baru.
+Membuat banner baru dengan file upload.
 
 ```http
 POST /admin/banners
@@ -763,21 +772,19 @@ POST /admin/banners
 **Headers:**
 ```
 Authorization: Bearer <access_token>
+Content-Type: multipart/form-data
 ```
 
-**Request Body:**
-```json
-{
-  "title": "Banner Sholat Jumat",
-  "media_url": "uploads/banners/banner-jumat.jpg",
-  "type": "image"
-}
-```
-
-**Fields:**
+**Form Data:**
+- `file` (required) - File media (image: jpg, jpeg, png, webp atau video: mp4)
 - `title` (required, min: 3, max: 255) - Judul banner
-- `media_url` (required) - URL atau path ke file media
 - `type` (required) - Tipe media: `"image"` atau `"video"`
+
+**File Requirements:**
+- Max size: 10MB (configurable)
+- Image types: image/jpeg, image/jpg, image/png, image/webp
+- Video types: video/mp4
+- File type must match the `type` field
 
 **Response (201):**
 ```json
@@ -786,7 +793,7 @@ Authorization: Bearer <access_token>
   "data": {
     "id": 1,
     "title": "Banner Sholat Jumat",
-    "media_url": "uploads/banners/banner-jumat.jpg",
+    "media_url": "http://localhost:8080/uploads/1705312800_abc123_banner_jumat.jpg",
     "type": "image",
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-15T10:00:00Z"
@@ -794,23 +801,45 @@ Authorization: Bearer <access_token>
 }
 ```
 
-**Example:**
+**Example with cURL (Image):**
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/banners \
   -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Banner Sholat Jumat",
-    "media_url": "uploads/banners/banner-jumat.jpg",
-    "type": "image"
-  }'
+  -F "file=@/path/to/banner.jpg" \
+  -F "title=Banner Sholat Jumat" \
+  -F "type=image"
+```
+
+**Example with cURL (Video):**
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/banners \
+  -H "Authorization: Bearer <access_token>" \
+  -F "file=@/path/to/video.mp4" \
+  -F "title=Video Pengumuman" \
+  -F "type=video"
+```
+
+**Example with JavaScript (FormData):**
+```javascript
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+formData.append('title', 'Banner Sholat Jumat');
+formData.append('type', 'image');
+
+fetch('http://localhost:8080/api/v1/admin/banners', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer <access_token>'
+  },
+  body: formData
+});
 ```
 
 ---
 
 ### Update Banner (Admin - Protected)
 
-Mengupdate banner yang sudah ada.
+Mengupdate banner yang sudah ada. File upload bersifat optional.
 
 ```http
 PUT /admin/banners/:id
@@ -819,24 +848,22 @@ PUT /admin/banners/:id
 **Headers:**
 ```
 Authorization: Bearer <access_token>
+Content-Type: multipart/form-data
 ```
 
 **Path Parameters:**
 - `id` (required) - ID banner
 
-**Request Body:**
-```json
-{
-  "title": "Banner Sholat Jumat (Updated)",
-  "media_url": "uploads/banners/banner-jumat-new.jpg",
-  "type": "image"
-}
-```
-
-**Fields (all optional):**
+**Form Data (all optional):**
+- `file` - File media baru (jika ingin mengganti media)
 - `title` - Judul banner
-- `media_url` - URL atau path ke file media
-- `type` - Tipe media: `"image"` atau `"video"`
+- `type` - Tipe media: `"image"` atau `"video"` (required jika upload file baru)
+
+**File Requirements (jika upload file baru):**
+- Max size: 10MB (configurable)
+- Image types: image/jpeg, image/jpg, image/png, image/webp
+- Video types: video/mp4
+- File type must match the `type` field
 
 **Response (200):**
 ```json
@@ -845,7 +872,7 @@ Authorization: Bearer <access_token>
   "data": {
     "id": 1,
     "title": "Banner Sholat Jumat (Updated)",
-    "media_url": "uploads/banners/banner-jumat-new.jpg",
+    "media_url": "http://localhost:8080/uploads/1705312800_abc123_banner_jumat_new.jpg",
     "type": "image",
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-15T11:00:00Z"
@@ -853,15 +880,39 @@ Authorization: Bearer <access_token>
 }
 ```
 
-**Example:**
+**Example with cURL (Update title only):**
 ```bash
 curl -X PUT http://localhost:8080/api/v1/admin/banners/1 \
   -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Banner Sholat Jumat (Updated)",
-    "type": "video"
-  }'
+  -F "title=Banner Sholat Jumat (Updated)"
+```
+
+**Example with cURL (Update with new file):**
+```bash
+curl -X PUT http://localhost:8080/api/v1/admin/banners/1 \
+  -H "Authorization: Bearer <access_token>" \
+  -F "file=@/path/to/new-banner.jpg" \
+  -F "title=Banner Sholat Jumat (Updated)" \
+  -F "type=image"
+```
+
+**Example with JavaScript (FormData):**
+```javascript
+const formData = new FormData();
+formData.append('title', 'Banner Sholat Jumat (Updated)');
+// Optional: upload new file
+if (fileInput.files[0]) {
+  formData.append('file', fileInput.files[0]);
+  formData.append('type', 'image');
+}
+
+fetch('http://localhost:8080/api/v1/admin/banners/1', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer <access_token>'
+  },
+  body: formData
+});
 ```
 
 ---
@@ -893,6 +944,111 @@ Authorization: Bearer <access_token>
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/admin/banners/1 \
   -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+## File Upload Endpoint
+
+### Upload File (Admin - Protected)
+
+Utility endpoint untuk upload file secara standalone (optional, bisa langsung upload via Gallery/Banner endpoints).
+
+```http
+POST /admin/upload
+```
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+Content-Type: multipart/form-data
+```
+
+**Form Data:**
+- `file` (required) - File yang akan diupload
+
+**File Requirements:**
+- Max size: 10MB (default, configurable via `UPLOAD_MAX_SIZE`)
+- Allowed types: image/jpeg, image/jpg, image/png, image/webp, video/mp4
+
+**Response (200):**
+```json
+{
+  "message": "File uploaded successfully",
+  "data": {
+    "filename": "1705312800_abc123_original_name.jpg",
+    "original_name": "original_name.jpg",
+    "url": "http://localhost:8080/uploads/1705312800_abc123_original_name.jpg",
+    "mime_type": "image/jpeg",
+    "size": 245678
+  }
+}
+```
+
+**Example with cURL:**
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/upload \
+  -H "Authorization: Bearer <access_token>" \
+  -F "file=@/path/to/file.jpg"
+```
+
+**Error Responses:**
+
+**400 Bad Request - File size exceeds limit:**
+```json
+{
+  "error": "File size exceeds maximum allowed size (10485760 bytes)"
+}
+```
+
+**400 Bad Request - Invalid file type:**
+```json
+{
+  "error": "File type 'application/pdf' is not allowed"
+}
+```
+
+**400 Bad Request - File is required:**
+```json
+{
+  "error": "File is required"
+}
+```
+
+---
+
+## Static File Serving
+
+Uploaded files dapat diakses secara langsung melalui:
+
+```
+GET /uploads/<filename>
+```
+
+**Example:**
+```bash
+curl http://localhost:8080/uploads/1705312800_abc123_image.jpg
+```
+
+Files disimpan di folder `./uploads` (configurable via `UPLOAD_PATH`).
+
+---
+
+## File Upload Configuration
+
+File upload dapat dikonfigurasi melalui environment variables:
+
+- `UPLOAD_MAX_SIZE` - Maximum file size in bytes (default: 10485760 = 10MB)
+- `UPLOAD_ALLOWED_TYPES` - Comma-separated list of allowed MIME types
+- `UPLOAD_PATH` - Path to save uploaded files (default: `./uploads`)
+- `UPLOAD_PUBLIC_URL` - Public URL prefix for uploaded files (default: `http://localhost:8080/uploads`)
+
+**Example .env configuration:**
+```env
+UPLOAD_MAX_SIZE=10485760
+UPLOAD_ALLOWED_TYPES=image/jpeg,image/jpg,image/png,image/webp,video/mp4
+UPLOAD_PATH=./uploads
+UPLOAD_PUBLIC_URL=http://localhost:8080/uploads
 ```
 
 ---

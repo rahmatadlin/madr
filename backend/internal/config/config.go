@@ -11,12 +11,13 @@ import (
 
 // Config holds all configuration for the application
 type Config struct {
-	Server   ServerConfig
-	Database DatabaseConfig
-	JWT      JWTConfig
-	CORS     CORSConfig
+	Server    ServerConfig
+	Database  DatabaseConfig
+	JWT       JWTConfig
+	CORS      CORSConfig
 	RateLimit RateLimitConfig
-	Logging  LoggingConfig
+	Logging   LoggingConfig
+	Upload    UploadConfig
 }
 
 // ServerConfig holds server-related configuration
@@ -63,6 +64,14 @@ type LoggingConfig struct {
 	Format string
 }
 
+// UploadConfig holds file upload configuration
+type UploadConfig struct {
+	MaxSize      int64
+	AllowedTypes []string
+	UploadPath   string
+	PublicURL    string
+}
+
 var AppConfig *Config
 
 // Load loads configuration from environment variables
@@ -102,6 +111,12 @@ func Load() error {
 		Logging: LoggingConfig{
 			Level:  getEnv("LOG_LEVEL", "info"),
 			Format: getEnv("LOG_FORMAT", "json"),
+		},
+		Upload: UploadConfig{
+			MaxSize:      int64(getEnvInt("UPLOAD_MAX_SIZE", 10*1024*1024)), // Default 10MB
+			AllowedTypes: getEnvSlice("UPLOAD_ALLOWED_TYPES", []string{"image/jpeg", "image/jpg", "image/png", "image/webp", "video/mp4"}),
+			UploadPath:   getEnv("UPLOAD_PATH", "./uploads"),
+			PublicURL:    getEnv("UPLOAD_PUBLIC_URL", "http://localhost:8080/uploads"),
 		},
 	}
 
