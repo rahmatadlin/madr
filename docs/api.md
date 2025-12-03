@@ -5,6 +5,7 @@ Base URL: `http://localhost:8080/api/v1`
 ## Authentication
 
 API menggunakan JWT (JSON Web Token) untuk authentication. Terdapat dua jenis token:
+
 - **Access Token**: Token untuk mengakses protected endpoints (expires in 15 minutes by default)
 - **Refresh Token**: Token untuk memperbarui access token (expires in 7 days by default)
 
@@ -18,6 +19,7 @@ API menggunakan JWT (JSON Web Token) untuk authentication. Terdapat dua jenis to
 ### Default Admin Credentials
 
 Setelah pertama kali menjalankan aplikasi, default admin akan dibuat secara otomatis:
+
 - **Username**: `admin`
 - **Password**: `admin123`
 - **Email**: `admin@madr.local`
@@ -36,6 +38,7 @@ GET /api/health
 ```
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -57,10 +60,12 @@ GET /announcements/published
 ```
 
 **Query Parameters:**
+
 - `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
 - `offset` (optional, default: 0) - Offset untuk pagination
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -83,6 +88,7 @@ GET /announcements/published
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/announcements/published?limit=10&offset=0
 ```
@@ -98,9 +104,11 @@ GET /announcements/:id
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID pengumuman
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -117,6 +125,7 @@ GET /announcements/:id
 ```
 
 **Error Response (404):**
+
 ```json
 {
   "error": "Announcement not found"
@@ -124,6 +133,7 @@ GET /announcements/:id
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/announcements/1
 ```
@@ -139,6 +149,7 @@ POST /admin/announcements
 ```
 
 **Request Body:**
+
 ```json
 {
   "title": "Pengumuman Sholat Jumat",
@@ -149,12 +160,14 @@ POST /admin/announcements
 ```
 
 **Fields:**
+
 - `title` (required) - Judul pengumuman
 - `content` (required) - Isi pengumuman
 - `is_published` (optional, default: false) - Status publish
 - `author` (optional) - Nama author
 
 **Response (201):**
+
 ```json
 {
   "message": "Announcement created successfully",
@@ -172,6 +185,7 @@ POST /admin/announcements
 ```
 
 **Error Response (400):**
+
 ```json
 {
   "error": "Invalid request body",
@@ -180,6 +194,7 @@ POST /admin/announcements
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/announcements \
   -H "Content-Type: application/json" \
@@ -202,10 +217,12 @@ GET /admin/announcements
 ```
 
 **Query Parameters:**
+
 - `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
 - `offset` (optional, default: 0) - Offset untuk pagination
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -228,6 +245,7 @@ GET /admin/announcements
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/admin/announcements?limit=10&offset=0
 ```
@@ -243,9 +261,11 @@ PUT /admin/announcements/:id
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID pengumuman
 
 **Request Body:**
+
 ```json
 {
   "title": "Pengumuman Sholat Jumat (Updated)",
@@ -256,12 +276,14 @@ PUT /admin/announcements/:id
 ```
 
 **Fields (all optional):**
+
 - `title` - Judul pengumuman
 - `content` - Isi pengumuman
 - `is_published` - Status publish (boolean)
 - `author` - Nama author
 
 **Response (200):**
+
 ```json
 {
   "message": "Announcement updated successfully",
@@ -279,6 +301,7 @@ PUT /admin/announcements/:id
 ```
 
 **Error Response (404):**
+
 ```json
 {
   "error": "Announcement not found"
@@ -286,6 +309,7 @@ PUT /admin/announcements/:id
 ```
 
 **Example:**
+
 ```bash
 curl -X PUT http://localhost:8080/api/v1/admin/announcements/1 \
   -H "Content-Type: application/json" \
@@ -306,9 +330,11 @@ DELETE /admin/announcements/:id
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID pengumuman
 
 **Response (200):**
+
 ```json
 {
   "message": "Announcement deleted successfully"
@@ -316,6 +342,7 @@ DELETE /admin/announcements/:id
 ```
 
 **Error Response (404):**
+
 ```json
 {
   "error": "Announcement not found"
@@ -323,6 +350,7 @@ DELETE /admin/announcements/:id
 ```
 
 **Example:**
+
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/admin/announcements/1
 ```
@@ -340,10 +368,12 @@ GET /events
 ```
 
 **Query Parameters:**
+
 - `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
 - `offset` (optional, default: 0) - Offset untuk pagination
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -365,6 +395,7 @@ GET /events
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/events?limit=10&offset=0
 ```
@@ -380,9 +411,11 @@ GET /events/:id
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID event
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -398,6 +431,7 @@ GET /events/:id
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/events/1
 ```
@@ -413,11 +447,13 @@ POST /admin/events
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "title": "Sholat Jumat Berjamaah",
@@ -428,12 +464,14 @@ Authorization: Bearer <access_token>
 ```
 
 **Fields:**
+
 - `title` (required, min: 3, max: 255) - Judul event
 - `description` (optional) - Deskripsi event
 - `date` (required) - Tanggal dan waktu event (ISO 8601 format)
 - `location` (optional, max: 255) - Lokasi event
 
 **Response (201):**
+
 ```json
 {
   "message": "Event created successfully",
@@ -450,6 +488,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/events \
   -H "Authorization: Bearer <access_token>" \
@@ -473,14 +512,17 @@ PUT /admin/events/:id
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID event
 
 **Request Body:**
+
 ```json
 {
   "title": "Sholat Jumat Berjamaah (Updated)",
@@ -491,12 +533,14 @@ Authorization: Bearer <access_token>
 ```
 
 **Fields (all optional):**
+
 - `title` - Judul event
 - `description` - Deskripsi event
 - `date` - Tanggal dan waktu event
 - `location` - Lokasi event
 
 **Response (200):**
+
 ```json
 {
   "message": "Event updated successfully",
@@ -513,6 +557,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Example:**
+
 ```bash
 curl -X PUT http://localhost:8080/api/v1/admin/events/1 \
   -H "Authorization: Bearer <access_token>" \
@@ -534,14 +579,17 @@ DELETE /admin/events/:id
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID event
 
 **Response (200):**
+
 ```json
 {
   "message": "Event deleted successfully"
@@ -549,6 +597,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Example:**
+
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/admin/events/1 \
   -H "Authorization: Bearer <access_token>"
@@ -567,10 +616,12 @@ GET /gallery
 ```
 
 **Query Parameters:**
+
 - `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
 - `offset` (optional, default: 0) - Offset untuk pagination
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -590,6 +641,7 @@ GET /gallery
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/gallery?limit=10&offset=0
 ```
@@ -605,20 +657,24 @@ POST /admin/gallery
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 Content-Type: multipart/form-data
 ```
 
 **Form Data:**
+
 - `file` (required) - File gambar (jpg, jpeg, png, webp)
 - `title` (required, min: 3, max: 255) - Judul foto
 
 **File Requirements:**
+
 - Max size: 10MB (configurable)
 - Allowed types: image/jpeg, image/jpg, image/png, image/webp
 
 **Response (201):**
+
 ```json
 {
   "message": "Gallery item created successfully",
@@ -633,6 +689,7 @@ Content-Type: multipart/form-data
 ```
 
 **Example with cURL:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/gallery \
   -H "Authorization: Bearer <access_token>" \
@@ -641,17 +698,18 @@ curl -X POST http://localhost:8080/api/v1/admin/gallery \
 ```
 
 **Example with JavaScript (FormData):**
+
 ```javascript
 const formData = new FormData();
-formData.append('file', fileInput.files[0]);
-formData.append('title', 'Foto Kegiatan Sholat Jumat');
+formData.append("file", fileInput.files[0]);
+formData.append("title", "Foto Kegiatan Sholat Jumat");
 
-fetch('http://localhost:8080/api/v1/admin/gallery', {
-  method: 'POST',
+fetch("http://localhost:8080/api/v1/admin/gallery", {
+  method: "POST",
   headers: {
-    'Authorization': 'Bearer <access_token>'
+    Authorization: "Bearer <access_token>",
   },
-  body: formData
+  body: formData,
 });
 ```
 
@@ -666,14 +724,17 @@ DELETE /admin/gallery/:id
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID gallery item
 
 **Response (200):**
+
 ```json
 {
   "message": "Gallery item deleted successfully"
@@ -681,6 +742,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Example:**
+
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/admin/gallery/1 \
   -H "Authorization: Bearer <access_token>"
@@ -699,10 +761,12 @@ GET /banners
 ```
 
 **Query Parameters:**
+
 - `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
 - `offset` (optional, default: 0) - Offset untuk pagination
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -723,6 +787,7 @@ GET /banners
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/banners?limit=10&offset=0
 ```
@@ -738,9 +803,11 @@ GET /banners/:id
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID banner
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -755,6 +822,7 @@ GET /banners/:id
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/banners/1
 ```
@@ -770,23 +838,27 @@ POST /admin/banners
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 Content-Type: multipart/form-data
 ```
 
 **Form Data:**
+
 - `file` (required) - File media (image: jpg, jpeg, png, webp atau video: mp4)
 - `title` (required, min: 3, max: 255) - Judul banner
 - `type` (required) - Tipe media: `"image"` atau `"video"`
 
 **File Requirements:**
+
 - Max size: 10MB (configurable)
 - Image types: image/jpeg, image/jpg, image/png, image/webp
 - Video types: video/mp4
 - File type must match the `type` field
 
 **Response (201):**
+
 ```json
 {
   "message": "Banner created successfully",
@@ -802,6 +874,7 @@ Content-Type: multipart/form-data
 ```
 
 **Example with cURL (Image):**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/banners \
   -H "Authorization: Bearer <access_token>" \
@@ -811,6 +884,7 @@ curl -X POST http://localhost:8080/api/v1/admin/banners \
 ```
 
 **Example with cURL (Video):**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/banners \
   -H "Authorization: Bearer <access_token>" \
@@ -820,18 +894,19 @@ curl -X POST http://localhost:8080/api/v1/admin/banners \
 ```
 
 **Example with JavaScript (FormData):**
+
 ```javascript
 const formData = new FormData();
-formData.append('file', fileInput.files[0]);
-formData.append('title', 'Banner Sholat Jumat');
-formData.append('type', 'image');
+formData.append("file", fileInput.files[0]);
+formData.append("title", "Banner Sholat Jumat");
+formData.append("type", "image");
 
-fetch('http://localhost:8080/api/v1/admin/banners', {
-  method: 'POST',
+fetch("http://localhost:8080/api/v1/admin/banners", {
+  method: "POST",
   headers: {
-    'Authorization': 'Bearer <access_token>'
+    Authorization: "Bearer <access_token>",
   },
-  body: formData
+  body: formData,
 });
 ```
 
@@ -846,26 +921,31 @@ PUT /admin/banners/:id
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 Content-Type: multipart/form-data
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID banner
 
 **Form Data (all optional):**
+
 - `file` - File media baru (jika ingin mengganti media)
 - `title` - Judul banner
 - `type` - Tipe media: `"image"` atau `"video"` (required jika upload file baru)
 
 **File Requirements (jika upload file baru):**
+
 - Max size: 10MB (configurable)
 - Image types: image/jpeg, image/jpg, image/png, image/webp
 - Video types: video/mp4
 - File type must match the `type` field
 
 **Response (200):**
+
 ```json
 {
   "message": "Banner updated successfully",
@@ -881,6 +961,7 @@ Content-Type: multipart/form-data
 ```
 
 **Example with cURL (Update title only):**
+
 ```bash
 curl -X PUT http://localhost:8080/api/v1/admin/banners/1 \
   -H "Authorization: Bearer <access_token>" \
@@ -888,6 +969,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/banners/1 \
 ```
 
 **Example with cURL (Update with new file):**
+
 ```bash
 curl -X PUT http://localhost:8080/api/v1/admin/banners/1 \
   -H "Authorization: Bearer <access_token>" \
@@ -897,21 +979,22 @@ curl -X PUT http://localhost:8080/api/v1/admin/banners/1 \
 ```
 
 **Example with JavaScript (FormData):**
+
 ```javascript
 const formData = new FormData();
-formData.append('title', 'Banner Sholat Jumat (Updated)');
+formData.append("title", "Banner Sholat Jumat (Updated)");
 // Optional: upload new file
 if (fileInput.files[0]) {
-  formData.append('file', fileInput.files[0]);
-  formData.append('type', 'image');
+  formData.append("file", fileInput.files[0]);
+  formData.append("type", "image");
 }
 
-fetch('http://localhost:8080/api/v1/admin/banners/1', {
-  method: 'PUT',
+fetch("http://localhost:8080/api/v1/admin/banners/1", {
+  method: "PUT",
   headers: {
-    'Authorization': 'Bearer <access_token>'
+    Authorization: "Bearer <access_token>",
   },
-  body: formData
+  body: formData,
 });
 ```
 
@@ -926,14 +1009,17 @@ DELETE /admin/banners/:id
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Path Parameters:**
+
 - `id` (required) - ID banner
 
 **Response (200):**
+
 ```json
 {
   "message": "Banner deleted successfully"
@@ -941,6 +1027,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Example:**
+
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/admin/banners/1 \
   -H "Authorization: Bearer <access_token>"
@@ -959,19 +1046,23 @@ POST /admin/upload
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 Content-Type: multipart/form-data
 ```
 
 **Form Data:**
+
 - `file` (required) - File yang akan diupload
 
 **File Requirements:**
+
 - Max size: 10MB (default, configurable via `UPLOAD_MAX_SIZE`)
 - Allowed types: image/jpeg, image/jpg, image/png, image/webp, video/mp4
 
 **Response (200):**
+
 ```json
 {
   "message": "File uploaded successfully",
@@ -986,6 +1077,7 @@ Content-Type: multipart/form-data
 ```
 
 **Example with cURL:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/admin/upload \
   -H "Authorization: Bearer <access_token>" \
@@ -995,6 +1087,7 @@ curl -X POST http://localhost:8080/api/v1/admin/upload \
 **Error Responses:**
 
 **400 Bad Request - File size exceeds limit:**
+
 ```json
 {
   "error": "File size exceeds maximum allowed size (10485760 bytes)"
@@ -1002,6 +1095,7 @@ curl -X POST http://localhost:8080/api/v1/admin/upload \
 ```
 
 **400 Bad Request - Invalid file type:**
+
 ```json
 {
   "error": "File type 'application/pdf' is not allowed"
@@ -1009,6 +1103,7 @@ curl -X POST http://localhost:8080/api/v1/admin/upload \
 ```
 
 **400 Bad Request - File is required:**
+
 ```json
 {
   "error": "File is required"
@@ -1026,6 +1121,7 @@ GET /uploads/<filename>
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/uploads/1705312800_abc123_image.jpg
 ```
@@ -1044,6 +1140,7 @@ File upload dapat dikonfigurasi melalui environment variables:
 - `UPLOAD_PUBLIC_URL` - Public URL prefix for uploaded files (default: `http://localhost:8080/uploads`)
 
 **Example .env configuration:**
+
 ```env
 UPLOAD_MAX_SIZE=10485760
 UPLOAD_ALLOWED_TYPES=image/jpeg,image/jpg,image/png,image/webp,video/mp4
@@ -1056,6 +1153,7 @@ UPLOAD_PUBLIC_URL=http://localhost:8080/uploads
 ## Error Responses
 
 ### 400 Bad Request
+
 ```json
 {
   "error": "Invalid request body",
@@ -1064,6 +1162,7 @@ UPLOAD_PUBLIC_URL=http://localhost:8080/uploads
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "error": "Resource not found"
@@ -1071,6 +1170,7 @@ UPLOAD_PUBLIC_URL=http://localhost:8080/uploads
 ```
 
 ### 429 Too Many Requests
+
 ```json
 {
   "error": "Too many requests. Please try again later."
@@ -1078,6 +1178,7 @@ UPLOAD_PUBLIC_URL=http://localhost:8080/uploads
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
   "error": "Internal server error"
@@ -1089,6 +1190,7 @@ UPLOAD_PUBLIC_URL=http://localhost:8080/uploads
 ## Rate Limiting
 
 API dilindungi dengan rate limiting:
+
 - Default: 100 requests per minute per IP
 - Dapat dikonfigurasi melalui environment variables
 
@@ -1097,6 +1199,7 @@ API dilindungi dengan rate limiting:
 ## CORS
 
 CORS dikonfigurasi untuk mengizinkan request dari origins yang ditentukan. Default:
+
 - `http://localhost:3000` (Frontend Web)
 - `http://localhost:3001` (Frontend CMS)
 
@@ -1113,6 +1216,7 @@ POST /auth/register
 ```
 
 **Request Body:**
+
 ```json
 {
   "username": "newuser",
@@ -1124,6 +1228,7 @@ POST /auth/register
 ```
 
 **Fields:**
+
 - `username` (required, min: 3, max: 100) - Username unik
 - `email` (required, valid email) - Email unik
 - `password` (required, min: 6) - Password
@@ -1131,6 +1236,7 @@ POST /auth/register
 - `role` (optional) - Role user: "user" (default) atau "admin"
 
 **Response (201):**
+
 ```json
 {
   "message": "User registered successfully",
@@ -1150,6 +1256,7 @@ POST /auth/register
 ```
 
 **Error Response (409):**
+
 ```json
 {
   "error": "username already exists"
@@ -1157,6 +1264,7 @@ POST /auth/register
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/register \
   -H "Content-Type: application/json" \
@@ -1179,6 +1287,7 @@ POST /auth/login
 ```
 
 **Request Body:**
+
 ```json
 {
   "username": "admin",
@@ -1187,10 +1296,12 @@ POST /auth/login
 ```
 
 **Fields:**
+
 - `username` (required) - Username atau email
 - `password` (required) - Password
 
 **Response (200):**
+
 ```json
 {
   "message": "Login successful",
@@ -1213,6 +1324,7 @@ POST /auth/login
 ```
 
 **Error Response (401):**
+
 ```json
 {
   "error": "Invalid credentials"
@@ -1220,6 +1332,7 @@ POST /auth/login
 ```
 
 **Error Response (403):**
+
 ```json
 {
   "error": "Account is inactive"
@@ -1227,6 +1340,7 @@ POST /auth/login
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/login \
   -H "Content-Type: application/json" \
@@ -1247,6 +1361,7 @@ POST /auth/refresh
 ```
 
 **Request Body:**
+
 ```json
 {
   "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -1254,9 +1369,11 @@ POST /auth/refresh
 ```
 
 **Fields:**
+
 - `refresh_token` (required) - Refresh token yang valid
 
 **Response (200):**
+
 ```json
 {
   "message": "Token refreshed successfully",
@@ -1270,6 +1387,7 @@ POST /auth/refresh
 ```
 
 **Error Response (401):**
+
 ```json
 {
   "error": "invalid refresh token"
@@ -1277,6 +1395,7 @@ POST /auth/refresh
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/refresh \
   -H "Content-Type: application/json" \
@@ -1296,11 +1415,13 @@ GET /auth/me
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -1320,6 +1441,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Response (401):**
+
 ```json
 {
   "error": "Unauthorized"
@@ -1327,6 +1449,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:8080/api/v1/auth/me \
   -H "Authorization: Bearer your-access-token-here"
@@ -1343,6 +1466,7 @@ POST /auth/logout
 ```
 
 **Request Body:**
+
 ```json
 {
   "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -1350,9 +1474,11 @@ POST /auth/logout
 ```
 
 **Fields:**
+
 - `refresh_token` (required) - Refresh token yang akan di-revoke
 
 **Response (200):**
+
 ```json
 {
   "message": "Logged out successfully"
@@ -1360,6 +1486,7 @@ POST /auth/logout
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/logout \
   -H "Content-Type: application/json" \
@@ -1379,11 +1506,13 @@ POST /auth/logout-all
 ```
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Logged out from all devices successfully"
@@ -1391,6 +1520,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Response (401):**
+
 ```json
 {
   "error": "Unauthorized"
@@ -1398,6 +1528,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/logout-all \
   -H "Authorization: Bearer your-access-token-here"
@@ -1421,6 +1552,7 @@ curl -X POST http://localhost:8080/api/v1/auth/logout-all \
 ## Summary of Endpoints
 
 ### Public Endpoints (No Authentication Required)
+
 - `GET /announcements/published` - Get published announcements
 - `GET /announcements/:id` - Get announcement by ID
 - `GET /events` - Get all events
@@ -1434,10 +1566,12 @@ curl -X POST http://localhost:8080/api/v1/auth/logout-all \
 - `POST /auth/logout` - Logout
 
 ### Protected Endpoints (Require JWT Authentication)
+
 - `GET /auth/me` - Get current user info
 - `POST /auth/logout-all` - Logout from all devices
 
 ### Admin Endpoints (Require JWT Authentication + Admin Role)
+
 - `POST /admin/announcements` - Create announcement
 - `GET /admin/announcements` - Get all announcements (including unpublished)
 - `PUT /admin/announcements/:id` - Update announcement
@@ -1453,28 +1587,613 @@ curl -X POST http://localhost:8080/api/v1/auth/logout-all \
 
 ---
 
+## Donation Categories
+
+### Get All Donation Categories (Admin - Protected)
+
+Mengambil daftar semua kategori donasi.
+
+```http
+GET /admin/donation-categories
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Pembangunan",
+      "description": "Donasi untuk pembangunan masjid",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Operasional",
+      "description": "Donasi untuk operasional masjid",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    }
+  ]
+}
+```
+
+**Example:**
+
+```bash
+curl http://localhost:8080/api/v1/admin/donation-categories \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+### Get Donation Category by ID (Admin - Protected)
+
+Mengambil detail kategori donasi berdasarkan ID.
+
+```http
+GET /admin/donation-categories/:id
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Pembangunan",
+    "description": "Donasi untuk pembangunan masjid",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+
+```bash
+curl http://localhost:8080/api/v1/admin/donation-categories/1 \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+### Create Donation Category (Admin - Protected)
+
+Membuat kategori donasi baru.
+
+```http
+POST /admin/donation-categories
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "name": "Pembangunan",
+  "description": "Donasi untuk pembangunan masjid"
+}
+```
+
+**Fields:**
+
+- `name` (required, min: 3, max: 255) - Nama kategori (unique)
+- `description` (optional) - Deskripsi kategori
+
+**Response (201):**
+
+```json
+{
+  "message": "Donation category created successfully",
+  "data": {
+    "id": 1,
+    "name": "Pembangunan",
+    "description": "Donasi untuk pembangunan masjid",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Error Response (409):**
+
+```json
+{
+  "error": "category name already exists"
+}
+```
+
+**Example:**
+
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/donation-categories \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Pembangunan",
+    "description": "Donasi untuk pembangunan masjid"
+  }'
+```
+
+---
+
+### Update Donation Category (Admin - Protected)
+
+Mengupdate kategori donasi yang sudah ada.
+
+```http
+PUT /admin/donation-categories/:id
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "name": "Pembangunan (Updated)",
+  "description": "Updated description"
+}
+```
+
+**Fields (all optional):**
+
+- `name` - Nama kategori
+- `description` - Deskripsi kategori
+
+**Response (200):**
+
+```json
+{
+  "message": "Donation category updated successfully",
+  "data": {
+    "id": 1,
+    "name": "Pembangunan (Updated)",
+    "description": "Updated description",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+**Example:**
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/admin/donation-categories/1 \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Pembangunan (Updated)"
+  }'
+```
+
+---
+
+### Delete Donation Category (Admin - Protected)
+
+Menghapus kategori donasi (soft delete).
+
+```http
+DELETE /admin/donation-categories/:id
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200):**
+
+```json
+{
+  "message": "Donation category deleted successfully"
+}
+```
+
+**Example:**
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/admin/donation-categories/1 \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+## Donations
+
+### Get All Donations (Admin - Protected)
+
+Mengambil daftar semua donasi dengan pagination dan optional status filter.
+
+```http
+GET /admin/donations
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+```
+
+**Query Parameters:**
+
+- `limit` (optional, default: 10, max: 100) - Jumlah data per halaman
+- `offset` (optional, default: 0) - Offset untuk pagination
+- `status` (optional) - Filter by payment status: `pending`, `success`, `failed`
+
+**Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "category_id": 1,
+      "donor_name": "Ahmad Fauzi",
+      "amount": 100000,
+      "message": "Semoga berkah",
+      "payment_status": "success",
+      "category": {
+        "id": 1,
+        "name": "Pembangunan",
+        "description": "Donasi untuk pembangunan masjid"
+      },
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "total": 150,
+  "limit": 10,
+  "offset": 0,
+  "total_pages": 15
+}
+```
+
+**Example:**
+
+```bash
+# Get all donations
+curl http://localhost:8080/api/v1/admin/donations?limit=10&offset=0 \
+  -H "Authorization: Bearer <access_token>"
+
+# Get only success donations
+curl http://localhost:8080/api/v1/admin/donations?status=success \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+### Get Donation by ID (Admin - Protected)
+
+Mengambil detail donasi berdasarkan ID.
+
+```http
+GET /admin/donations/:id
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "id": 1,
+    "category_id": 1,
+    "donor_name": "Ahmad Fauzi",
+    "amount": 100000,
+    "message": "Semoga berkah",
+    "payment_status": "success",
+    "category": {
+      "id": 1,
+      "name": "Pembangunan",
+      "description": "Donasi untuk pembangunan masjid"
+    },
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+
+```bash
+curl http://localhost:8080/api/v1/admin/donations/1 \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+### Create Donation (Admin - Protected)
+
+Membuat entri donasi baru (manual entry dari admin).
+
+```http
+POST /admin/donations
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "category_id": 1,
+  "donor_name": "Ahmad Fauzi",
+  "amount": 100000,
+  "message": "Semoga berkah",
+  "payment_status": "success"
+}
+```
+
+**Fields:**
+
+- `category_id` (required) - ID kategori donasi
+- `donor_name` (optional) - Nama donor (null untuk anonymous)
+- `amount` (required, must be > 0) - Jumlah donasi
+- `message` (optional) - Pesan dari donor
+- `payment_status` (optional) - Status pembayaran: `pending` (default), `success`, `failed`
+
+**Response (201):**
+
+```json
+{
+  "message": "Donation created successfully",
+  "data": {
+    "id": 1,
+    "category_id": 1,
+    "donor_name": "Ahmad Fauzi",
+    "amount": 100000,
+    "message": "Semoga berkah",
+    "payment_status": "success",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+**Example:**
+
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/donations \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category_id": 1,
+    "donor_name": "Ahmad Fauzi",
+    "amount": 100000,
+    "message": "Semoga berkah",
+    "payment_status": "success"
+  }'
+```
+
+**Example - Anonymous Donation:**
+
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/donations \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category_id": 1,
+    "amount": 50000,
+    "payment_status": "success"
+  }'
+```
+
+---
+
+### Update Donation (Admin - Protected)
+
+Mengupdate donasi yang sudah ada.
+
+```http
+PUT /admin/donations/:id
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "category_id": 2,
+  "donor_name": "Ahmad Fauzi (Updated)",
+  "amount": 150000,
+  "message": "Updated message",
+  "payment_status": "success"
+}
+```
+
+**Fields (all optional):**
+
+- `category_id` - ID kategori donasi
+- `donor_name` - Nama donor (null untuk anonymous)
+- `amount` - Jumlah donasi (must be > 0)
+- `message` - Pesan dari donor
+- `payment_status` - Status pembayaran: `pending`, `success`, `failed`
+
+**Response (200):**
+
+```json
+{
+  "message": "Donation updated successfully",
+  "data": {
+    "id": 1,
+    "category_id": 2,
+    "donor_name": "Ahmad Fauzi (Updated)",
+    "amount": 150000,
+    "message": "Updated message",
+    "payment_status": "success",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+**Example:**
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/admin/donations/1 \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 150000,
+    "payment_status": "success"
+  }'
+```
+
+---
+
+### Delete Donation (Admin - Protected)
+
+Menghapus donasi (soft delete).
+
+```http
+DELETE /admin/donations/:id
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200):**
+
+```json
+{
+  "message": "Donation deleted successfully"
+}
+```
+
+**Example:**
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/admin/donations/1 \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+### Get Donation Summary (Public)
+
+Mendapatkan ringkasan donasi untuk ditampilkan di landing page. **Endpoint ini PUBLIC** (tidak memerlukan authentication).
+
+```http
+GET /donations/summary
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "total_amount": 20000000,
+    "total_transactions": 150,
+    "per_category": [
+      {
+        "category_id": 1,
+        "category": "Pembangunan",
+        "amount": 12000000
+      },
+      {
+        "category_id": 2,
+        "category": "Operasional",
+        "amount": 6000000
+      },
+      {
+        "category_id": 3,
+        "category": "Sosial",
+        "amount": 2000000
+      }
+    ]
+  }
+}
+```
+
+**Notes:**
+
+- Summary hanya menghitung donasi dengan status `success`
+- Total amount dan transactions dihitung dari semua donasi success
+- Per category diurutkan berdasarkan amount descending
+- Menggunakan optimized SQL dengan JOIN dan GROUP BY
+
+**Example:**
+
+```bash
+curl http://localhost:8080/api/v1/donations/summary
+```
+
+---
+
 ## Next Improvements Suggestions
 
 ### 1. File Upload Endpoint
+
 Implementasi endpoint untuk upload file (gambar/video) untuk Gallery dan Banner:
+
 - `POST /admin/upload` - Upload file dan return URL
 - Support multiple file formats (jpg, png, mp4, etc.)
 - File validation (size, type)
 - Storage di `/uploads` folder atau cloud storage
 
 ### 2. Advanced Filtering & Search
+
 - Filter events by date range
 - Search announcements by keyword
 - Filter gallery by category/tags
 - Sort options untuk semua endpoints
 
 ### 3. Donations Module
+
 - CRUD untuk donasi
 - Payment gateway integration
 - Donation reports & analytics
 - Recurring donations support
 
 ### 4. Enhanced Features
+
 - Event registration/RSVP
 - Comments system untuk announcements
 - Newsletter subscription
@@ -1482,25 +2201,28 @@ Implementasi endpoint untuk upload file (gambar/video) untuk Gallery dan Banner:
 - SMS notifications
 
 ### 5. Performance & Optimization
+
 - Caching untuk public endpoints (Redis)
 - Image optimization & CDN integration
 - Database indexing optimization
 - API response compression
 
 ### 6. Security Enhancements
+
 - Rate limiting per user (not just IP)
 - API key for public integrations
 - Audit logging untuk admin actions
 - Two-factor authentication (2FA)
 
 ### 7. Analytics & Reporting
+
 - Dashboard analytics
 - User activity tracking
 - Content performance metrics
 - Export reports (PDF/Excel)
 
 ### 8. Multi-language Support
+
 - i18n untuk announcements & events
 - Language preference per user
 - Content translation management
-
