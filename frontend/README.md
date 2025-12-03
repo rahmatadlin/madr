@@ -1,0 +1,76 @@
+# Frontend Monorepo
+
+Frontend monorepo untuk Masjid Al-Madr menggunakan npm workspaces.
+
+## 📁 Struktur
+
+```
+frontend/
+├── package.json         # Workspace config
+├── package-lock.json   # Lock file
+├── .npmrc              # npm config
+├── node_modules/       # Semua dependencies di sini (hoisted)
+├── web/                # Landing page
+│   └── package.json
+└── cms/                # Admin dashboard
+    └── package.json
+```
+
+**Penting**: Semua `node_modules` di-hoist ke `frontend/node_modules`. Tidak ada `node_modules` di `web/` atau `cms/`.
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+cd frontend
+npm install
+```
+
+### Development
+
+```bash
+# Run web landing page (port 3000)
+npm run dev:web
+
+# Run CMS dashboard (port 3001)
+npm run dev:cms
+
+# Run both simultaneously
+npm run dev:all
+```
+
+### Build
+
+```bash
+# Build web
+npm run build:web
+
+# Build CMS
+npm run build:cms
+
+# Build all
+npm run build:all
+```
+
+## 📦 Managing Dependencies
+
+```bash
+# Add to web
+npm install <package> -w web
+
+# Add to CMS
+npm install <package> -w cms
+
+# Add shared dependency
+npm install -w <package>
+```
+
+## 🧹 Cleanup
+
+```bash
+npm run clean  # Remove all node_modules and builds
+```
+
+Lihat [../MONOREPO_SETUP.md](../MONOREPO_SETUP.md) untuk dokumentasi lengkap.
+

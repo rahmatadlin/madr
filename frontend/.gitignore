@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js builds (workspace level)
+web/.next/
+web/out/
+web/dist/
+web/build/
+cms/.next/
+cms/out/
+cms/dist/
+cms/build/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing
+coverage/
+.nyc_output
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Package locks (keep root lock file)
+web/package-lock.json
+cms/package-lock.json
+

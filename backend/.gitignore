@@ -41,3 +41,6 @@ Thumbs.db
 uploads/*
 !uploads/.gitkeep
 
+# Go sum (optional, bisa di-commit atau di-ignore)
+# go.sum
+
