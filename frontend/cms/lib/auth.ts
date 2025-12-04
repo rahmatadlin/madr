@@ -20,7 +20,7 @@ export const authOptions: NextAuthConfig = {
         try {
           const username = String(credentials.username);
           const password = String(credentials.password);
-          
+
           const response = await authApi.login({
             username,
             password,
@@ -38,7 +38,34 @@ export const authOptions: NextAuthConfig = {
           };
         } catch (error) {
           logger.error("Login failed", error);
-          return null;
+          // Log more details for debugging
+          const err = error as {
+            message?: string;
+            response?: { data?: unknown };
+          };
+
+          // Extract error message from response if available
+          let errorMessage = err.message || "Login failed";
+
+          // Try to extract error from axios response
+          if (err.response?.data) {
+            const responseData = err.response.data as {
+              error?: string;
+              message?: string;
+            };
+            errorMessage =
+              responseData.error || responseData.message || errorMessage;
+          }
+
+          logger.error("Login error details", {
+            message: errorMessage,
+            originalError: err.message,
+            response: err.response?.data,
+            error: String(error),
+          });
+
+          // Throw error with specific message for NextAuth
+          throw new Error(errorMessage);
         }
       },
     }),
@@ -46,16 +73,16 @@ export const authOptions: NextAuthConfig = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = (user as any).accessToken;
-        token.refreshToken = (user as any).refreshToken;
-        token.role = (user as any).role;
+        token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).accessToken = token.accessToken;
-        (session.user as any).role = token.role;
+      if (session?.user && token) {
+        session.user.accessToken = token.accessToken as string | undefined;
+        session.user.role = token.role as string | undefined;
       }
       return session;
     },
@@ -67,5 +94,5 @@ export const authOptions: NextAuthConfig = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET || "your-secret-key-change-in-production",
+  debug: process.env.NODE_ENV === "development",
 };
-

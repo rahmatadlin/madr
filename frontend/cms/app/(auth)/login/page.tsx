@@ -9,7 +9,13 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
 
@@ -45,7 +51,28 @@ export default function LoginPage() {
 
       if (result?.error) {
         logger.warn("Login failed", result.error);
-        toast.error("Invalid username or password");
+        // Show more specific error message
+        let errorMsg = "Login failed";
+
+        if (result.error === "CredentialsSignin") {
+          errorMsg = "Invalid username or password";
+        } else if (
+          result.error.includes("Failed to login") ||
+          result.error.includes("Login failed")
+        ) {
+          errorMsg =
+            "Unable to connect to server. Please check your connection.";
+        } else {
+          errorMsg = result.error;
+        }
+
+        toast.error(errorMsg);
+        logger.error("Login error details", {
+          error: result.error,
+          url: result.url,
+          ok: result.ok,
+          status: result.status,
+        });
         return;
       }
 
@@ -118,4 +145,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

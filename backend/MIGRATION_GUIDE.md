@@ -58,6 +58,7 @@ go run backend/cmd/seed/main.go
 ### Data yang di-seed:
 
 1. **Default Admin User**
+
    - Username: `admin`
    - Password: `admin123`
    - Email: `admin@madr.local`
@@ -98,11 +99,13 @@ backend/
 ### Setup Database Baru
 
 1. **Jalankan migrations:**
+
    ```bash
    go run cmd/migrate/main.go -command=up
    ```
 
 2. **Jalankan seeding:**
+
    ```bash
    go run cmd/seed/main.go
    ```
@@ -159,12 +162,31 @@ Pastikan Anda menjalankan command dari folder `backend/` atau pastikan path migr
 
 Jika migration gagal di tengah jalan, database akan dalam "dirty state". Untuk memperbaikinya:
 
-1. Cek versi migration: `go run cmd/migrate/main.go -command=version`
-2. Perbaiki masalah di migration file
-3. Rollback manual jika perlu
-4. Jalankan migration lagi
+1. **Cek versi migration:**
+
+   ```bash
+   go run cmd/migrate/main.go -command=version
+   ```
+
+2. **Perbaiki masalah di migration file** (jika ada syntax error)
+
+3. **Force version** untuk membersihkan dirty state:
+
+   ```bash
+   # Force ke versi sebelumnya (misalnya versi 4 jika gagal di versi 5)
+   go run cmd/migrate/main.go -command=force -version=4
+
+   # Atau force ke versi yang sama jika tabel sudah dibuat dengan benar
+   go run cmd/migrate/main.go -command=force -version=5
+   ```
+
+4. **Jalankan migration lagi:**
+   ```bash
+   go run cmd/migrate/main.go -command=up
+   ```
+
+**Catatan:** Force version hanya membersihkan dirty flag, tidak menjalankan migration. Pastikan struktur database sudah sesuai dengan versi yang di-force.
 
 ### Seeder tidak berjalan
 
 Seeder akan skip jika data sudah ada. Untuk re-seed, hapus data terlebih dahulu atau modifikasi seeder untuk force update.
-

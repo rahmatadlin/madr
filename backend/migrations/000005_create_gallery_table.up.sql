@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS gallery (
 );
 
 -- Create indexes
-CREATE INDEX IF EXISTS idx_gallery_deleted_at ON gallery(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_gallery_deleted_at ON gallery(deleted_at);
 

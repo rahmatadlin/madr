@@ -14,7 +14,8 @@ import (
 
 func main() {
 	var (
-		command = flag.String("command", "up", "Migration command: up, down, version")
+		command = flag.String("command", "up", "Migration command: up, down, version, force")
+		version = flag.Int("version", 0, "Version number (required for force command)")
 	)
 	flag.Parse()
 
@@ -53,19 +54,31 @@ func main() {
 			os.Exit(1)
 		}
 	case "version":
-		version, dirty, err := migrate.GetMigrationVersion(sqlDB)
+		currentVersion, dirty, err := migrate.GetMigrationVersion(sqlDB)
 		if err != nil {
 			logger.Fatal().Err(err).Msg("Failed to get migration version")
 			os.Exit(1)
 		}
 		if dirty {
-			logger.Warn().Uint("version", version).Msg("Database is in dirty state")
+			logger.Warn().Uint("version", currentVersion).Msg("Database is in dirty state. Use 'force' command to fix.")
 		} else {
-			logger.Info().Uint("version", version).Msg("Current migration version")
+			logger.Info().Uint("version", currentVersion).Msg("Current migration version")
+		}
+	case "force":
+		if *version < 0 {
+			fmt.Fprintf(os.Stderr, "Version number is required for force command\n")
+			fmt.Fprintf(os.Stderr, "Usage: migrate -command=force -version=<version_number>\n")
+			fmt.Fprintf(os.Stderr, "Example: migrate -command=force -version=5\n")
+			os.Exit(1)
+		}
+		if err := migrate.ForceVersion(sqlDB, *version); err != nil {
+			logger.Fatal().Err(err).Msg("Failed to force version")
+			os.Exit(1)
 		}
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", *command)
-		fmt.Fprintf(os.Stderr, "Usage: migrate -command=[up|down|version]\n")
+		fmt.Fprintf(os.Stderr, "Usage: migrate -command=[up|down|version|force]\n")
+		fmt.Fprintf(os.Stderr, "For force: migrate -command=force -version=<version_number>\n")
 		os.Exit(1)
 	}
 }

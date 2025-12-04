@@ -142,3 +142,35 @@ func GetMigrationVersion(db *sql.DB) (uint, bool, error) {
 	return version, dirty, nil
 }
 
+// ForceVersion forces the database to a specific migration version
+// Use this to fix dirty state: ForceVersion(db, 5) to set version to 5
+func ForceVersion(db *sql.DB, version int) error {
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		return fmt.Errorf("failed to create postgres driver: %w", err)
+	}
+
+	migrationsPath, err := getMigrationsPath()
+	if err != nil {
+		return fmt.Errorf("failed to find migrations directory: %w", err)
+	}
+
+	migrationsURL := fmt.Sprintf("file://%s", migrationsPath)
+
+	m, err := migrate.NewWithDatabaseInstance(
+		migrationsURL,
+		config.AppConfig.Database.Name,
+		driver,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create migrate instance: %w", err)
+	}
+
+	if err := m.Force(version); err != nil {
+		return fmt.Errorf("failed to force version: %w", err)
+	}
+
+	logger.Info().Int("version", version).Msg("Migration version forced successfully")
+	return nil
+}
+

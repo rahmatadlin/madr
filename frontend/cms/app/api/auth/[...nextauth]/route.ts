@@ -1,11 +1,9 @@
 import NextAuth from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-const handler = NextAuth(authOptions);
+// NextAuth v5 beta - NextAuth returns handlers object with GET and POST methods
+const { handlers } = NextAuth(authOptions);
 
-// NextAuth v5 beta compatibility with Next.js 16
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const GET = handler as any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const POST = handler as any;
-
+// Export GET and POST handlers
+export const GET = handlers.GET;
+export const POST = handlers.POST;
