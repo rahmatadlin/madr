@@ -91,8 +91,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div
+      className="flex min-h-screen items-center justify-center p-4 relative"
+      style={{
+        backgroundImage: "url('/images/login-background.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Overlay untuk meningkatkan readability */}
+      <div className="absolute inset-0 bg-black/40" />
+
+      <Card className="w-full max-w-md relative z-10 bg-background/95 backdrop-blur-sm">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Masjid CMS</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
@@ -134,12 +145,6 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
-
-          <div className="mt-4 text-sm text-muted-foreground">
-            <p>Default credentials:</p>
-            <p>Username: admin</p>
-            <p>Password: admin123</p>
-          </div>
         </CardContent>
       </Card>
     </div>

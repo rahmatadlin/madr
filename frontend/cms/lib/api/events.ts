@@ -17,29 +17,36 @@ export interface CreateEventRequest {
   location: string;
 }
 
-export interface UpdateEventRequest extends Partial<CreateEventRequest> {}
+export type UpdateEventRequest = Partial<CreateEventRequest>;
 
 export const eventApi = {
   getAll: async (limit = 10, offset = 0): Promise<PaginatedResponse<Event>> => {
-    const response = await apiClient.get<PaginatedResponse<Event>>("/admin/events", {
+    // Use public endpoint for GET (admin GET doesn't exist)
+    const response = await apiClient.get<PaginatedResponse<Event>>("/events", {
       params: { limit, offset },
     });
     return response.data;
   },
   getById: async (id: number): Promise<Event> => {
-    const response = await apiClient.get<ApiResponse<Event>>(`/admin/events/${id}`);
+    // Use public endpoint for GET (admin GET doesn't exist)
+    const response = await apiClient.get<ApiResponse<Event>>(`/events/${id}`);
     return response.data.data!;
   },
   create: async (data: CreateEventRequest): Promise<Event> => {
-    const response = await apiClient.post<ApiResponse<Event>>("/admin/events", data);
+    const response = await apiClient.post<ApiResponse<Event>>(
+      "/admin/events",
+      data
+    );
     return response.data.data!;
   },
   update: async (id: number, data: UpdateEventRequest): Promise<Event> => {
-    const response = await apiClient.put<ApiResponse<Event>>(`/admin/events/${id}`, data);
+    const response = await apiClient.put<ApiResponse<Event>>(
+      `/admin/events/${id}`,
+      data
+    );
     return response.data.data!;
   },
   delete: async (id: number): Promise<void> => {
     await apiClient.delete(`/admin/events/${id}`);
   },
 };
-

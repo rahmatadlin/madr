@@ -78,13 +78,17 @@ export function EventModal({
   }, [event, eventId, open, reset]);
 
   const onSubmit = async (data: EventFormData) => {
+    // Convert datetime-local format (YYYY-MM-DDTHH:mm) to RFC3339 (ISO 8601)
+    // datetime-local doesn't include seconds and timezone, so we convert to ISO format
+    const dateValue = data.date ? new Date(data.date).toISOString() : "";
+
     const submitData = {
       title: data.title,
       description: data.description || "",
-      date: data.date,
+      date: dateValue,
       location: data.location,
     };
-    
+
     if (eventId) {
       await updateMutation.mutateAsync({ id: eventId, data: submitData });
     } else {
@@ -93,7 +97,8 @@ export function EventModal({
     onSuccess();
   };
 
-  const isLoadingForm = isLoading || createMutation.isPending || updateMutation.isPending;
+  const isLoadingForm =
+    isLoading || createMutation.isPending || updateMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -125,7 +130,9 @@ export function EventModal({
                 disabled={isLoadingForm}
               />
               {errors.title && (
-                <p className="text-sm text-destructive">{errors.title.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.title.message}
+                </p>
               )}
             </div>
 
@@ -150,7 +157,9 @@ export function EventModal({
                   disabled={isLoadingForm}
                 />
                 {errors.date && (
-                  <p className="text-sm text-destructive">{errors.date.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.date.message}
+                  </p>
                 )}
               </div>
 
@@ -163,7 +172,9 @@ export function EventModal({
                   disabled={isLoadingForm}
                 />
                 {errors.location && (
-                  <p className="text-sm text-destructive">{errors.location.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.location.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -191,4 +202,3 @@ export function EventModal({
     </Dialog>
   );
 }
-

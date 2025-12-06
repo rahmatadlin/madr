@@ -5,6 +5,7 @@ import { QueryProvider } from "@/lib/providers/query-provider";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProviderWrapper } from "@/components/providers/session-provider";
+import { AuthInterceptor } from "@/lib/api/auth-interceptor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,17 +26,19 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         <SessionProviderWrapper>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <QueryProvider>
-              {children}
-              <Toaster />
-            </QueryProvider>
-          </ThemeProvider>
+          <AuthInterceptor>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <QueryProvider>
+                {children}
+                <Toaster />
+              </QueryProvider>
+            </ThemeProvider>
+          </AuthInterceptor>
         </SessionProviderWrapper>
       </body>
     </html>
