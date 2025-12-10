@@ -6,6 +6,12 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { bannerApi } from "@/lib/api/banners";
 
+const apiBase = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+const apiBaseWithoutApi = apiBase.replace(/\/api\/v1\/?$/, "");
+const defaultBase = apiBaseWithoutApi || "http://localhost:8080";
+const resolveMediaUrl = (url: string) =>
+  url.startsWith("http") ? url : `${defaultBase}/uploads/${url}`;
+
 export function HeroSection() {
   const { data: banners } = useQuery({
     queryKey: ["banners"],
@@ -13,12 +19,15 @@ export function HeroSection() {
   });
 
   const heroBanner = banners?.data?.[0];
+  const mediaUrl = heroBanner?.media_url
+    ? resolveMediaUrl(heroBanner.media_url)
+    : undefined;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video/Image */}
       <div className="absolute inset-0 z-0">
-        {heroBanner?.type === "video" ? (
+        {heroBanner?.type === "video" && mediaUrl ? (
           <video
             autoPlay
             muted
@@ -26,14 +35,14 @@ export function HeroSection() {
             playsInline
             className="w-full h-full object-cover"
           >
-            <source src={heroBanner.media_url} type="video/mp4" />
+            <source src={mediaUrl} type="video/mp4" />
           </video>
         ) : (
           <div
             className="w-full h-full bg-cover bg-center"
             style={{
               backgroundImage: heroBanner
-                ? `url(${heroBanner.media_url})`
+                ? `url(${mediaUrl})`
                 : "linear-gradient(to bottom, #1e3a8a, #3b82f6)",
             }}
           />
@@ -104,4 +113,3 @@ export function HeroSection() {
     </section>
   );
 }
-

@@ -10,6 +10,7 @@ import {
   FileImage,
   DollarSign,
   LogOut,
+  Info,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -33,6 +34,11 @@ const menuItems = [
     title: "Banner",
     href: "/dashboard/banner",
     icon: FileImage,
+  },
+  {
+    title: "About",
+    href: "/dashboard/about",
+    icon: Info,
   },
   {
     title: "Donations",

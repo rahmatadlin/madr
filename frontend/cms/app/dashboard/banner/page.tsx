@@ -1,165 +1,220 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { bannerApi } from "@/lib/api/banners";
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const apiBaseEnv = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+const apiBaseWithoutApi = apiBaseEnv.replace(/\/api\/v1\/?$/, "");
+const defaultBase = apiBaseWithoutApi || "http://localhost:8080";
+const resolveMediaUrl = (url?: string | null) => {
+  if (!url) return null;
+  return url.startsWith("http") ? url : `${defaultBase}/uploads/${url}`;
+};
 
 export default function BannerPage() {
-  const [page, setPage] = useState(0);
-  const [search, setSearch] = useState("");
-  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
-  const limit = 10;
+  const limit = 1;
   const { data, isLoading } = useQuery({
-    queryKey: ["banners", limit, page * limit],
-    queryFn: () => bannerApi.getAll(limit, page * limit),
+    queryKey: ["banners", limit, 0],
+    queryFn: () => bannerApi.getAll(limit, 0),
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => bannerApi.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["banners"] });
-      queryClient.invalidateQueries({ queryKey: ["stats"] });
-      toast.success("Banner deleted successfully");
-      setDeleteConfirm(null);
-    },
-    onError: () => {
-      toast.error("Failed to delete banner");
-    },
-  });
-
-  const filteredBanners = data?.data.filter((banner) =>
-    banner.title.toLowerCase().includes(search.toLowerCase())
-  ) || [];
+  const banner = data?.data?.[0];
+  const initialTitle = banner?.title ?? "";
+  const initialType = banner?.type ?? "image";
+  const initialPreview = resolveMediaUrl(banner?.media_url);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Banners</h1>
-          <p className="text-muted-foreground">Manage banners and media</p>
-        </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Banner
-        </Button>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search banners..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold">Banner</h1>
+        <p className="text-muted-foreground">
+          Kelola satu banner utama untuk Hero (gambar atau video).
+        </p>
       </div>
 
       {isLoading ? (
         <div className="space-y-2">
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full" />
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
           ))}
-        </div>
-      ) : filteredBanners.length === 0 ? (
-        <div className="flex h-64 items-center justify-center text-muted-foreground">
-          No banners found
+          <Skeleton className="h-48 w-full" />
         </div>
       ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Media URL</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredBanners.map((banner) => (
-                <TableRow key={banner.id}>
-                  <TableCell className="font-medium">{banner.title}</TableCell>
-                  <TableCell>
-                    <Badge variant={banner.type === "image" ? "default" : "secondary"}>
-                      {banner.type}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="max-w-xs truncate">{banner.media_url}</TableCell>
-                  <TableCell>
-                    {new Date(banner.created_at).toLocaleDateString("id-ID")}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setDeleteConfirm(banner.id)}
-                    >
-                      <span className="text-destructive">Delete</span>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <BannerForm
+          key={banner?.id ?? "new"}
+          bannerId={banner?.id}
+          defaultTitle={initialTitle}
+          defaultType={initialType}
+          defaultPreview={initialPreview}
+          onSaved={() => {
+            queryClient.invalidateQueries({ queryKey: ["banners"] });
+            queryClient.invalidateQueries({ queryKey: ["stats"] });
+          }}
+        />
       )}
-
-      {/* TODO: Add Banner Modal for create/edit */}
-
-      <Dialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Banner</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this banner? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeleteConfirm(null)}
-              disabled={deleteMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => deleteMutation.mutate(deleteConfirm!)}
-              disabled={deleteMutation.isPending}
-            >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
 
+type BannerFormProps = {
+  bannerId?: number;
+  defaultTitle: string;
+  defaultType: "image" | "video";
+  defaultPreview: string | null;
+  onSaved: () => void;
+};
+
+function BannerForm({
+  bannerId,
+  defaultTitle,
+  defaultType,
+  defaultPreview,
+  onSaved,
+}: BannerFormProps) {
+  const [title, setTitle] = useState(defaultTitle);
+  const [type, setType] = useState<"image" | "video">(defaultType);
+  const [file, setFile] = useState<File | null>(null);
+
+  const accept = useMemo(
+    () => (type === "video" ? "video/mp4" : "image/*"),
+    [type]
+  );
+
+  const previewUrl = useMemo(() => {
+    if (file) {
+      return URL.createObjectURL(file);
+    }
+    return defaultPreview;
+  }, [file, defaultPreview]);
+
+  useEffect(() => {
+    if (!file) return;
+    return () => URL.revokeObjectURL(previewUrl || "");
+  }, [file, previewUrl]);
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      if (bannerId) {
+        return bannerApi.update(bannerId, {
+          title,
+          type,
+          file: file ?? undefined,
+        });
+      }
+      return bannerApi.create({
+        title,
+        type,
+        file: file ?? undefined,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Banner berhasil disimpan");
+      setFile(null);
+      onSaved();
+    },
+    onError: (err: unknown) => {
+      const maybeMsg = (err as { response?: { data?: { error?: string } } })
+        ?.response?.data?.error;
+      const msg = maybeMsg || "Gagal menyimpan banner";
+      toast.error(msg);
+    },
+  });
+
+  const isSaveDisabled =
+    !title.trim() || (!bannerId && !file) || saveMutation.isPending;
+
+  return (
+    <div className="space-y-4 rounded-lg border p-4">
+      <div className="space-y-2">
+        <Label htmlFor="title">Judul</Label>
+        <Input
+          id="title"
+          placeholder="Judul banner"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          disabled={saveMutation.isPending}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Jenis Media</Label>
+        <Select
+          value={type}
+          onValueChange={(v) => setType(v as "image" | "video")}
+          disabled={saveMutation.isPending}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Pilih jenis" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="image">Image</SelectItem>
+            <SelectItem value="video">Video (mp4)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>File {type === "video" ? "Video" : "Gambar"}</Label>
+        <Input
+          type="file"
+          accept={accept}
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+          disabled={saveMutation.isPending}
+        />
+        {type === "image" && previewUrl && (
+          <div className="relative mt-2 h-48 w-full overflow-hidden rounded-lg border bg-muted/30">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewUrl}
+              alt="Preview"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
+        {type === "video" && previewUrl && (
+          <div className="mt-2 space-y-2 rounded-lg border bg-muted/30 p-3">
+            <video
+              src={previewUrl}
+              controls
+              className="w-full rounded"
+              poster={previewUrl}
+            />
+            {file && (
+              <p className="text-sm text-muted-foreground">
+                File baru: {file.name}
+              </p>
+            )}
+          </div>
+        )}
+        {type === "video" && !previewUrl && file && (
+          <p className="text-sm text-muted-foreground">
+            File baru: {file.name}
+          </p>
+        )}
+      </div>
+      <div className="flex justify-end">
+        <Button onClick={() => saveMutation.mutate()} disabled={isSaveDisabled}>
+          {saveMutation.isPending ? "Menyimpan..." : "Simpan"}
+        </Button>
+      </div>
+      {!bannerId && (
+        <p className="text-sm text-muted-foreground">
+          Belum ada banner. Unggah file untuk membuat banner pertama.
+        </p>
+      )}
+    </div>
+  );
+}

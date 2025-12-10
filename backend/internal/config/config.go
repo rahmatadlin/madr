@@ -99,7 +99,7 @@ func Load() error {
 			RefreshExpiry: parseDuration(getEnv("JWT_REFRESH_EXPIRY", "7d")),
 		},
 		CORS: CORSConfig{
-			AllowedOrigins: getEnvSlice("CORS_ALLOWED_ORIGINS", []string{"http://localhost:3000"}),
+			AllowedOrigins: getEnvSlice("CORS_ALLOWED_ORIGINS", []string{"http://localhost:3000","http://localhost:3001"}),
 			AllowedMethods: getEnvSlice("CORS_ALLOWED_METHODS", []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"}),
 			AllowedHeaders: getEnvSlice("CORS_ALLOWED_HEADERS", []string{"Content-Type", "Authorization"}),
 		},
@@ -113,7 +113,7 @@ func Load() error {
 			Format: getEnv("LOG_FORMAT", "json"),
 		},
 		Upload: UploadConfig{
-			MaxSize:      int64(getEnvInt("UPLOAD_MAX_SIZE", 10*1024*1024)), // Default 10MB
+			MaxSize:      int64(getEnvInt("UPLOAD_MAX_SIZE", 50*1024*1024)), // Default 50MB
 			AllowedTypes: getEnvSlice("UPLOAD_ALLOWED_TYPES", []string{"image/jpeg", "image/jpg", "image/png", "image/webp", "video/mp4"}),
 			UploadPath:   getEnv("UPLOAD_PATH", "./uploads"),
 			PublicURL:    getEnv("UPLOAD_PUBLIC_URL", "http://localhost:8080/uploads"),

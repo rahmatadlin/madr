@@ -16,17 +16,24 @@ export interface CreateBannerRequest {
   file?: File;
 }
 
-export interface UpdateBannerRequest extends Partial<CreateBannerRequest> {}
+export type UpdateBannerRequest = Partial<CreateBannerRequest>;
 
 export const bannerApi = {
-  getAll: async (limit = 10, offset = 0): Promise<PaginatedResponse<Banner>> => {
-    const response = await apiClient.get<PaginatedResponse<Banner>>("/admin/banners", {
-      params: { limit, offset },
-    });
+  getAll: async (
+    limit = 10,
+    offset = 0
+  ): Promise<PaginatedResponse<Banner>> => {
+    // GET uses public endpoint (admin routes do not expose GET)
+    const response = await apiClient.get<PaginatedResponse<Banner>>(
+      "/banners",
+      {
+        params: { limit, offset },
+      }
+    );
     return response.data;
   },
   getById: async (id: number): Promise<Banner> => {
-    const response = await apiClient.get<ApiResponse<Banner>>(`/admin/banners/${id}`);
+    const response = await apiClient.get<ApiResponse<Banner>>(`/banners/${id}`);
     return response.data.data!;
   },
   create: async (data: CreateBannerRequest): Promise<Banner> => {
@@ -39,11 +46,15 @@ export const bannerApi = {
       formData.append("media_url", data.media_url);
     }
 
-    const response = await apiClient.post<ApiResponse<Banner>>("/admin/banners", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await apiClient.post<ApiResponse<Banner>>(
+      "/admin/banners",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response.data.data!;
   },
   update: async (id: number, data: UpdateBannerRequest): Promise<Banner> => {
@@ -71,4 +82,3 @@ export const bannerApi = {
     await apiClient.delete(`/admin/banners/${id}`);
   },
 };
-
