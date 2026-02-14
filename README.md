@@ -11,10 +11,9 @@ madr/
 │   ├── internal/
 │   └── pkg/
 ├── frontend/
-│   ├── web/             # Landing page (Next.js 15)
-│   └── cms/             # Admin dashboard (Next.js 15)
+│   ├── web/             # Landing page (Vue 3, Vite, TypeScript, Tailwind 4)
+│   └── cms/             # Admin dashboard (Vue 3, Vite, TypeScript, Tailwind 4)
 ├── docs/                # Documentation
-├── package.json         # Root workspace config (npm workspaces)
 └── docker-compose.yml   # Docker setup
 ```
 
@@ -44,14 +43,9 @@ cp .env.example .env
 # Edit .env with your database config
 go mod download
 
-# Setup frontend environment files
-cd ../frontend/web
-cp .env.example .env
-# Edit .env: NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
-
-cd ../cms
-cp .env.example .env
-# Edit .env dengan API URL dan NextAuth config
+# Setup frontend environment (optional)
+# Buat .env di frontend/web dan frontend/cms jika backend tidak di localhost:8080:
+# VITE_API_URL=http://localhost:8080/api/v1
 ```
 
 ### Development
@@ -93,8 +87,8 @@ Proyek ini menggunakan **npm workspaces** untuk mengelola multiple frontend appl
 
 ### 🎯 Keuntungan
 
-- **Shared Dependencies**: Dependencies yang sama (react, next, dll) di-install sekali di root
-- **Disk Space Savings**: Menghemat ratusan MB dengan menghindari duplikasi
+- **Shared Dependencies**: Dependencies yang sama (vue, vite, dll) di-install sekali di root
+- **Disk Space Savings**: Menghemat ruang dengan menghindari duplikasi
 - **Consistent Versions**: Semua workspace menggunakan versi dependency yang sama
 - **Easier Maintenance**: Update dependencies di satu tempat
 
@@ -116,10 +110,8 @@ npm run build:cms        # Build CMS
 npm run build:all        # Build all workspaces
 
 # Utilities
-npm run clean            # Clean all node_modules & builds
+npm run clean            # Clean all node_modules & build output (dist)
 npm install              # Install all workspace dependencies
-npm run lint:web         # Lint web workspace
-npm run lint:cms         # Lint CMS workspace
 ```
 
 ### Adding Dependencies
@@ -157,7 +149,7 @@ madr/
 **Note**: 
 - Semua `node_modules` di-hoist ke `frontend/node_modules`
 - Tidak ada `node_modules` di `web/` atau `cms/` (semua shared)
-- Shared dependencies seperti `react`, `next`, `typescript` tidak duplikat
+- Shared dependencies seperti `vue`, `vite`, `typescript` tidak duplikat
 
 Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang monorepo setup dan best practices.
 
@@ -172,10 +164,9 @@ Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang mono
 ## 📚 Documentation
 
 - [Backend README](./backend/README.md) - Backend API documentation
-- [Frontend Web README](./frontend/web/WEB_README.md) - Landing page docs
-- [Frontend CMS README](./frontend/cms/README.md) - CMS dashboard docs
+- [Frontend README](./frontend/README.md) - Web & CMS (Vue 3, Vite, Tailwind 4)
 - [API Documentation](./docs/api.md) - Complete API reference
-- [Monorepo Setup](./MONOREPO_SETUP.md) - Workspace management guide
+- [Monorepo Setup](./docs/MONOREPO_SETUP.md) - Workspace management guide
 
 ## 🛠️ Tech Stack
 
@@ -188,20 +179,21 @@ Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang mono
 - Zerolog
 
 ### Frontend Web
-- Next.js 15
+- Vue 3 (Composition API)
+- Vite
 - TypeScript
 - Tailwind CSS v4
-- TanStack Query
-- Framer Motion
+- Vue Router
+- Axios
 
 ### Frontend CMS
-- Next.js 15
+- Vue 3 (Composition API)
+- Vite
 - TypeScript
 - Tailwind CSS v4
-- shadcn/ui
-- NextAuth.js
-- TanStack Query
-- Recharts
+- Vue Router
+- Pinia (state / auth)
+- Axios
 
 ## 📝 Environment Variables
 
@@ -215,17 +207,15 @@ DB_NAME=masjid_db
 JWT_SECRET=your-secret-key
 ```
 
-### Frontend Web (.env)
+### Frontend (web & cms)
+Gunakan variabel `VITE_*` (Vite hanya mengekspos env yang diawali `VITE_`).
+
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+# .env atau .env.local di frontend/web dan frontend/cms
+VITE_API_URL=http://localhost:8080/api/v1
 ```
 
-### Frontend CMS (.env)
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
-NEXTAUTH_SECRET=your-secret-key
-NEXTAUTH_URL=http://localhost:3001
-```
+Backend tetap di `http://localhost:8080` secara default; ubah jika perlu.
 
 ## 🧪 Testing
 
