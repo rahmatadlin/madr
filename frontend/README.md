@@ -1,6 +1,11 @@
 # Frontend Monorepo
 
-Frontend monorepo untuk Masjid Al-Madr menggunakan npm workspaces.
+Frontend monorepo untuk Masjid Al-Madr: **Vue 3**, **Vite**, **TypeScript**, **Tailwind CSS 4**. Menggunakan npm workspaces.
+
+- **web**: situs publik (port 3000)
+- **cms**: dashboard admin (port 3001)
+
+Environment: set `VITE_API_URL` (mis. `http://localhost:8080/api/v1`) di `.env` atau `.env.local` di `web/` dan `cms/` jika backend tidak di `http://localhost:8080/api/v1`.
 
 ## 📁 Struktur
 

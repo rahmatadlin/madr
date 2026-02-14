@@ -3,15 +3,9 @@ node_modules/
 .pnp
 .pnp.js
 
-# Next.js builds (workspace level)
-web/.next/
-web/out/
+# Builds (Vite)
 web/dist/
-web/build/
-cms/.next/
-cms/out/
 cms/dist/
-cms/build/
 
 # TypeScript
 *.tsbuildinfo

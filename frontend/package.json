@@ -14,9 +14,7 @@
     "build:cms": "npm run build --workspace=cms",
     "build:all": "npm run build:web && npm run build:cms",
     "install:all": "npm install",
-    "clean": "rm -rf node_modules web/node_modules cms/node_modules web/.next cms/.next web/out cms/out",
-    "lint:web": "npm run lint --workspace=web",
-    "lint:cms": "npm run lint --workspace=cms"
+    "clean": "rm -rf node_modules web/node_modules cms/node_modules web/dist cms/dist"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
