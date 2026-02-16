@@ -32,31 +32,33 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { youtubeApi } from '@/api/youtube'
-import type { YouTubeVideo } from '@/api/youtube'
+import { kajianApi } from '@/api/kajian'
+import type { Kajian } from '@/api/kajian'
 import Footer from '@/components/layouts/Footer.vue'
 
 const route = useRoute()
-const video = ref<YouTubeVideo | null>(null)
+const video = ref<Kajian | null>(null)
 const loading = ref(true)
 
-const embedUrl = computed(() =>
-  video.value ? `https://www.youtube.com/embed/${video.value.video_id}` : ''
-)
+const embedUrl = computed(() => {
+  if (!video.value) return ''
+  const videoId = video.value.youtube_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1] || video.value.video_id
+  return `https://www.youtube.com/embed/${videoId}`
+})
 
 function formatDate(d: string) {
   return new Date(d).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 }
 
 onMounted(async () => {
-  const videoId = route.params.id as string
-  if (!videoId) {
+  const id = route.params.id as string
+  if (!id) {
     loading.value = false
     return
   }
   try {
-    const res = await youtubeApi.getKajianVideos()
-    video.value = res.data.find((v) => v.video_id === videoId) || null
+    const res = await kajianApi.getById(parseInt(id, 10))
+    video.value = res.data || null
   } catch {
     video.value = null
   } finally {

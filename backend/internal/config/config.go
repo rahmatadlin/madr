@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -18,6 +19,7 @@ type Config struct {
 	RateLimit RateLimitConfig
 	Logging   LoggingConfig
 	Upload    UploadConfig
+	YouTube   YouTubeConfig
 }
 
 // ServerConfig holds server-related configuration
@@ -72,12 +74,51 @@ type UploadConfig struct {
 	PublicURL    string
 }
 
+// YouTubeConfig holds YouTube API configuration
+type YouTubeConfig struct {
+	APIKey    string
+	ChannelID string
+	APIURL    string
+}
+
 var AppConfig *Config
 
 // Load loads configuration from environment variables
 func Load() error {
-	// Load .env file if it exists (optional, for local development)
-	_ = godotenv.Load()
+	// Try to load .env file from multiple possible locations
+	// First try current directory
+	envPaths := []string{
+		".env",
+		"./.env",
+		"../.env",
+		"../../.env",
+	}
+	
+	var envLoaded bool
+	for _, path := range envPaths {
+		if err := godotenv.Load(path); err == nil {
+			envLoaded = true
+			break
+		}
+	}
+	
+	// Also try to find .env relative to the executable
+	if !envLoaded {
+		// Try to get the directory where the binary is running
+		execPath, err := os.Executable()
+		if err == nil {
+			execDir := filepath.Dir(execPath)
+			envPath := filepath.Join(execDir, ".env")
+			if err := godotenv.Load(envPath); err == nil {
+				envLoaded = true
+			}
+		}
+	}
+	
+	// If still not loaded, try without path (godotenv will search)
+	if !envLoaded {
+		_ = godotenv.Load() // Ignore error, .env is optional
+	}
 
 	AppConfig = &Config{
 		Server: ServerConfig{
@@ -118,6 +159,23 @@ func Load() error {
 			UploadPath:   getEnv("UPLOAD_PATH", "./uploads"),
 			PublicURL:    getEnv("UPLOAD_PUBLIC_URL", "http://localhost:8080/uploads"),
 		},
+		YouTube: YouTubeConfig{
+			APIKey:    getEnv("YOUTUBE_API_KEY", ""),
+			ChannelID: getEnv("YOUTUBE_CHANNEL_ID", ""),
+			APIURL:    getEnv("YOUTUBE_API_URL", "https://www.googleapis.com/youtube/v3/search"),
+		},
+	}
+
+	// Fallback: Try to read directly from environment if not loaded from .env
+	if AppConfig.YouTube.APIKey == "" {
+		if envKey := os.Getenv("YOUTUBE_API_KEY"); envKey != "" {
+			AppConfig.YouTube.APIKey = envKey
+		}
+	}
+	if AppConfig.YouTube.ChannelID == "" {
+		if envChannelID := os.Getenv("YOUTUBE_CHANNEL_ID"); envChannelID != "" {
+			AppConfig.YouTube.ChannelID = envChannelID
+		}
 	}
 
 	return nil

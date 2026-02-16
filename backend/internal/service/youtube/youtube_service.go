@@ -8,13 +8,8 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/madr/backend/internal/config"
 	"github.com/madr/backend/pkg/logger"
-)
-
-const (
-	YouTubeAPIKey    = "AIzaSyAnXmKQn5nka20et5qkyptOySfxmB6h5BY"
-	YouTubeChannelID = "UCPTIg2Lw3V81c74awdSBqnQ"
-	YouTubeAPIURL    = "https://www.googleapis.com/youtube/v3/search"
 )
 
 // Video represents a YouTube video
@@ -61,27 +56,50 @@ func NewService() Service {
 
 // GetRecentVideos fetches videos uploaded in the last N days
 func (s *service) GetRecentVideos(days int) ([]Video, error) {
+	// Get YouTube configuration
+	ytConfig := config.AppConfig.YouTube
+	
+	// Debug logging
+	logger.Debug().
+		Str("api_key", maskAPIKey(ytConfig.APIKey)).
+		Str("channel_id", ytConfig.ChannelID).
+		Str("api_url", ytConfig.APIURL).
+		Msg("YouTube service configuration")
+	
+	if ytConfig.APIKey == "" {
+		logger.Error().Msg("YouTube API key is not configured")
+		return nil, fmt.Errorf("YouTube API key is not configured")
+	}
+	if ytConfig.ChannelID == "" {
+		logger.Error().Msg("YouTube Channel ID is not configured")
+		return nil, fmt.Errorf("YouTube Channel ID is not configured")
+	}
+
 	// Calculate publishedAfter date (30 days ago)
 	publishedAfter := time.Now().AddDate(0, 0, -days).Format(time.RFC3339)
 
 	// Build request URL with proper encoding
-	reqURL, err := url.Parse(YouTubeAPIURL)
+	reqURL, err := url.Parse(ytConfig.APIURL)
 	if err != nil {
 		return nil, fmt.Errorf("invalid API URL: %w", err)
 	}
 
 	params := url.Values{}
 	params.Add("part", "snippet")
-	params.Add("channelId", YouTubeChannelID)
+	params.Add("channelId", ytConfig.ChannelID)
 	params.Add("order", "date")
 	params.Add("maxResults", "50")
 	params.Add("type", "video")
-	params.Add("key", YouTubeAPIKey)
+	params.Add("key", ytConfig.APIKey)
 	params.Add("publishedAfter", publishedAfter)
 	reqURL.RawQuery = params.Encode()
 
 	fullURL := reqURL.String()
-	logger.Debug().Str("url", fullURL).Msg("Fetching YouTube videos")
+	logger.Info().
+		Str("url", fullURL).
+		Str("channel_id", ytConfig.ChannelID).
+		Str("published_after", publishedAfter).
+		Msg("Fetching YouTube videos")
 
 	// Make HTTP request
 	resp, err := http.Get(fullURL)
@@ -145,4 +163,12 @@ func (s *service) GetRecentVideos(days int) ([]Video, error) {
 
 	logger.Info().Int("count", len(videos)).Msg("Successfully fetched YouTube videos")
 	return videos, nil
+}
+
+// maskAPIKey masks the API key for logging (shows first 10 and last 4 characters)
+func maskAPIKey(key string) string {
+	if len(key) <= 14 {
+		return "***"
+	}
+	return key[:10] + "..." + key[len(key)-4:]
 }

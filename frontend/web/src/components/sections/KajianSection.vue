@@ -10,13 +10,13 @@
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <router-link
           v-for="video in videos"
-          :key="video.video_id"
-          :to="'/kajian/' + video.video_id"
+          :key="video.id"
+          :to="'/kajian/' + video.id"
           class="group block rounded-xl border bg-white overflow-hidden shadow-sm hover:shadow-lg transition-shadow"
         >
           <div class="relative aspect-video bg-gray-200">
             <img
-              :src="video.thumbnail_url"
+              :src="video.thumbnail_url || 'https://placehold.co/640x360/e5e7eb/6b7280?text=Video'"
               :alt="video.title"
               class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
@@ -37,10 +37,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { youtubeApi } from '@/api/youtube'
-import type { YouTubeVideo } from '@/api/youtube'
+import { kajianApi } from '@/api/kajian'
+import type { Kajian } from '@/api/kajian'
 
-const videos = ref<YouTubeVideo[]>([])
+const videos = ref<Kajian[]>([])
 const isLoading = ref(true)
 
 function formatDate(d: string) {
@@ -49,7 +49,7 @@ function formatDate(d: string) {
 
 onMounted(async () => {
   try {
-    const res = await youtubeApi.getKajianVideos()
+    const res = await kajianApi.getAll(12, 0)
     videos.value = res.data ?? []
   } finally {
     isLoading.value = false

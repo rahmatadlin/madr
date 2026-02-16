@@ -1,0 +1,2 @@
+-- Rollback: This migration removes invalid data, so rollback is not applicable
+-- The constraint removal is handled automatically by GORM if needed
