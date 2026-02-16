@@ -1,4 +1,4 @@
-# Masjid Al-Madr - Management System
+# Masjid Agung Discovery Residence - Management System
 
 Monorepo untuk sistem manajemen masjid dengan backend Go, frontend landing page, dan CMS admin dashboard.
 
@@ -146,7 +146,8 @@ madr/
 │       └── package.json    # CMS package config
 ```
 
-**Note**: 
+**Note**:
+
 - Semua `node_modules` di-hoist ke `frontend/node_modules`
 - Tidak ada `node_modules` di `web/` atau `cms/` (semua shared)
 - Shared dependencies seperti `vue`, `vite`, `typescript` tidak duplikat
@@ -156,6 +157,7 @@ Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang mono
 ## 🔐 Default Credentials
 
 ### Backend Admin
+
 - Username: `admin`
 - Password: `admin123`
 
@@ -171,6 +173,7 @@ Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang mono
 ## 🛠️ Tech Stack
 
 ### Backend
+
 - Go 1.21+
 - Gin Framework
 - GORM
@@ -179,6 +182,7 @@ Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang mono
 - Zerolog
 
 ### Frontend Web
+
 - Vue 3 (Composition API)
 - Vite
 - TypeScript
@@ -187,6 +191,7 @@ Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang mono
 - Axios
 
 ### Frontend CMS
+
 - Vue 3 (Composition API)
 - Vite
 - TypeScript
@@ -198,6 +203,7 @@ Lihat [MONOREPO_SETUP.md](./MONOREPO_SETUP.md) untuk detail lengkap tentang mono
 ## 📝 Environment Variables
 
 ### Backend (.env)
+
 ```env
 DB_HOST=localhost
 DB_PORT=5432
@@ -208,6 +214,7 @@ JWT_SECRET=your-secret-key
 ```
 
 ### Frontend (web & cms)
+
 Gunakan variabel `VITE_*` (Vite hanya mengekspos env yang diawali `VITE_`).
 
 ```env
@@ -233,6 +240,7 @@ npm run test --workspace=cms
 ## 🚢 Deployment
 
 ### Backend
+
 ```bash
 cd backend
 docker build -f Dockerfile.backend -t masjid-backend .
@@ -240,6 +248,7 @@ docker run -p 8080:8080 masjid-backend
 ```
 
 ### Frontend
+
 ```bash
 cd frontend
 
@@ -260,4 +269,4 @@ npm run build:cms
 
 ## 📄 License
 
-Copyright © 2024 Masjid Al-Madr. All rights reserved.
+Copyright © 2024 Masjid Agung Discovery Residence. All rights reserved.

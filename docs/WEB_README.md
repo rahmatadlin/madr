@@ -1,6 +1,6 @@
-# Masjid Al-Madr - Landing Page Frontend
+# Masjid Agung Discovery Residence - Landing Page Frontend
 
-Landing page untuk Masjid Al-Madr menggunakan Next.js 15 dengan App Router, TypeScript, Tailwind CSS v4, dan shadcn/ui.
+Landing page untuk Masjid Agung Discovery Residence menggunakan Next.js 15 dengan App Router, TypeScript, Tailwind CSS v4, dan shadcn/ui.
 
 ## 🚀 Tech Stack
 
@@ -155,6 +155,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
 ### API Service Layer
 
 Semua API calls menggunakan TanStack Query untuk:
+
 - Caching
 - Automatic refetching
 - Loading states
@@ -181,6 +182,7 @@ Project menggunakan Tailwind CSS v4 dengan konfigurasi default dari Next.js.
 ### shadcn/ui Components
 
 Components yang sudah diinstall:
+
 - Button
 - Card
 - Input
@@ -203,6 +205,7 @@ npx shadcn@latest add [component-name]
 ## 🎭 Animations
 
 Menggunakan Framer Motion untuk:
+
 - Page transitions
 - Scroll-triggered animations
 - Hover effects
@@ -278,6 +281,7 @@ Counter menggunakan `react-countup` untuk smooth number animation. Data di-refet
 ### Image Optimization
 
 Semua images menggunakan Next.js `Image` component dengan:
+
 - Automatic optimization
 - Lazy loading
 - Responsive sizing
@@ -298,5 +302,4 @@ TanStack Query menangani error secara otomatis. Untuk better UX, bisa tambahkan 
 
 ## 📄 License
 
-Copyright © 2024 Masjid Al-Madr. All rights reserved.
-
+Copyright © 2024 Masjid Agung Discovery Residence. All rights reserved.

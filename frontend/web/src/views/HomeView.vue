@@ -4,6 +4,7 @@
     <AboutSection />
     <DonationCounter />
     <EventsSection />
+    <KajianSection />
     <GallerySection />
     <ContactSection />
     <Footer />
@@ -15,6 +16,7 @@ import HeroSection from '@/components/sections/HeroSection.vue'
 import AboutSection from '@/components/sections/AboutSection.vue'
 import DonationCounter from '@/components/sections/DonationCounter.vue'
 import EventsSection from '@/components/sections/EventsSection.vue'
+import KajianSection from '@/components/sections/KajianSection.vue'
 import GallerySection from '@/components/sections/GallerySection.vue'
 import ContactSection from '@/components/sections/ContactSection.vue'
 import Footer from '@/components/layouts/Footer.vue'

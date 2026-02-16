@@ -382,7 +382,7 @@ GET /events
       "title": "Sholat Jumat Berjamaah",
       "description": "Sholat Jumat akan dilaksanakan di masjid utama",
       "date": "2024-01-20T12:00:00Z",
-      "location": "Masjid Al-Madr",
+      "location": "Masjid Agung Discovery Residence",
       "created_at": "2024-01-15T10:00:00Z",
       "updated_at": "2024-01-15T10:00:00Z"
     }
@@ -423,7 +423,7 @@ GET /events/:id
     "title": "Sholat Jumat Berjamaah",
     "description": "Sholat Jumat akan dilaksanakan di masjid utama",
     "date": "2024-01-20T12:00:00Z",
-    "location": "Masjid Al-Madr",
+    "location": "Masjid Agung Discovery Residence",
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-15T10:00:00Z"
   }
@@ -459,7 +459,7 @@ Authorization: Bearer <access_token>
   "title": "Sholat Jumat Berjamaah",
   "description": "Sholat Jumat akan dilaksanakan di masjid utama",
   "date": "2024-01-20T12:00:00Z",
-  "location": "Masjid Al-Madr"
+  "location": "Masjid Agung Discovery Residence"
 }
 ```
 
@@ -480,7 +480,7 @@ Authorization: Bearer <access_token>
     "title": "Sholat Jumat Berjamaah",
     "description": "Sholat Jumat akan dilaksanakan di masjid utama",
     "date": "2024-01-20T12:00:00Z",
-    "location": "Masjid Al-Madr",
+    "location": "Masjid Agung Discovery Residence",
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-15T10:00:00Z"
   }
@@ -497,7 +497,7 @@ curl -X POST http://localhost:8080/api/v1/admin/events \
     "title": "Sholat Jumat Berjamaah",
     "description": "Sholat Jumat akan dilaksanakan di masjid utama",
     "date": "2024-01-20T12:00:00Z",
-    "location": "Masjid Al-Madr"
+    "location": "Masjid Agung Discovery Residence"
   }'
 ```
 
@@ -528,7 +528,7 @@ Authorization: Bearer <access_token>
   "title": "Sholat Jumat Berjamaah (Updated)",
   "description": "Updated description",
   "date": "2024-01-20T13:00:00Z",
-  "location": "Masjid Al-Madr - Ruang Utama"
+  "location": "Masjid Agung Discovery Residence - Ruang Utama"
 }
 ```
 
@@ -549,7 +549,7 @@ Authorization: Bearer <access_token>
     "title": "Sholat Jumat Berjamaah (Updated)",
     "description": "Updated description",
     "date": "2024-01-20T13:00:00Z",
-    "location": "Masjid Al-Madr - Ruang Utama",
+    "location": "Masjid Agung Discovery Residence - Ruang Utama",
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-15T11:00:00Z"
   }
@@ -564,7 +564,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/events/1 \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Sholat Jumat Berjamaah (Updated)",
-    "location": "Masjid Al-Madr - Ruang Utama"
+    "location": "Masjid Agung Discovery Residence - Ruang Utama"
   }'
 ```
 

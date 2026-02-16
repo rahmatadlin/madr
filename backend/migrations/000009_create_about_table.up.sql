@@ -22,9 +22,9 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM about) THEN
         INSERT INTO about (title, subtitle, description, additional_description, image_url, years_active, active_members)
         VALUES (
-            'Tentang Masjid Al-Madr',
+            'Tentang Masjid Agung Discovery Residence',
             'Pusat kegiatan keagamaan dan sosial',
-            'Masjid Al-Madr adalah pusat kegiatan keagamaan dan sosial yang berkomitmen untuk membangun komunitas yang harmonis dan berkualitas.',
+            'Masjid Agung Discovery Residence adalah pusat kegiatan keagamaan dan sosial yang berkomitmen untuk membangun komunitas yang harmonis dan berkualitas.',
             'Dengan dukungan dari para jamaah dan donatur, kami terus mengembangkan fasilitas dan program yang dapat memberikan manfaat lebih luas bagi masyarakat.',
             '',
             15,

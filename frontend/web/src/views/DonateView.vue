@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 py-20">
       <div class="text-center mb-12 animate-fade-in">
         <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          Donasi untuk Masjid Al-Madr
+          Donasi untuk Masjid Agung Discovery Residence
         </h1>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">
           Bantu kami membangun dan mengembangkan masjid untuk kemaslahatan umat.
@@ -67,28 +67,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { donationApi } from '@/api/donations'
-import type { DonationSummary } from '@/api/donations'
-import Footer from '@/components/layouts/Footer.vue'
+import { ref, onMounted } from "vue";
+import { donationApi } from "@/api/donations";
+import type { DonationSummary } from "@/api/donations";
+import Footer from "@/components/layouts/Footer.vue";
 
-const summary = ref<DonationSummary | null>(null)
-const isLoading = ref(true)
+const summary = ref<DonationSummary | null>(null);
+const isLoading = ref(true);
 
 function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount)
+  }).format(amount);
 }
 
 onMounted(async () => {
   try {
-    summary.value = await donationApi.getSummary()
+    summary.value = await donationApi.getSummary();
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-})
+});
 </script>

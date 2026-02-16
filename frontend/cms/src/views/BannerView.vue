@@ -10,19 +10,16 @@
     </div>
     <div v-else class="space-y-4 rounded-lg border p-4">
       <div>
-        <label class="block text-sm font-medium mb-1">Judul</label>
-        <input v-model="title" placeholder="Judul banner" class="w-full px-3 py-2 border rounded-lg" />
+        <UiLabel for-id="banner-title">Judul</UiLabel>
+        <UiInput id="banner-title" v-model="title" placeholder="Judul banner" class="mt-1" />
       </div>
       <div>
-        <label class="block text-sm font-medium mb-1">Jenis Media</label>
-        <select v-model="mediaType" class="w-full px-3 py-2 border rounded-lg">
-          <option value="image">Image</option>
-          <option value="video">Video (mp4)</option>
-        </select>
+        <UiLabel>Jenis Media</UiLabel>
+        <UiSelect v-model="mediaType" placeholder="Pilih jenis" :options="mediaTypeOptions" class="mt-1" />
       </div>
       <div>
-        <label class="block text-sm font-medium mb-1">File</label>
-        <input type="file" :accept="mediaType === 'video' ? 'video/mp4' : 'image/*'" class="w-full" @change="onFileChange" />
+        <UiLabel>File</UiLabel>
+        <input type="file" :accept="mediaType === 'video' ? 'video/mp4' : 'image/*'" class="mt-1 w-full text-sm" @change="onFileChange" />
         <div v-if="previewUrl && mediaType === 'image'" class="mt-2 h-48 rounded-lg border overflow-hidden">
           <img :src="previewUrl" alt="Preview" class="h-full w-full object-cover" />
         </div>
@@ -30,13 +27,9 @@
           <video :src="previewUrl" controls class="w-full rounded"></video>
         </div>
       </div>
-      <button
-        class="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50"
-        :disabled="saving || !title.trim() || (!bannerId && !file)"
-        @click="save"
-      >
+      <UiButton :disabled="saving || !title.trim() || (!bannerId && !file)" @click="save">
         {{ saving ? 'Menyimpan...' : 'Simpan' }}
-      </button>
+      </UiButton>
     </div>
   </div>
 </template>
@@ -45,6 +38,15 @@ import { ref, computed, onMounted } from 'vue'
 import { bannerApi } from '@/api/banners'
 import type { Banner } from '@/api/banners'
 import { resolveMediaUrl } from '@/utils/media'
+import UiLabel from '@/components/ui/Label.vue'
+import UiInput from '@/components/ui/Input.vue'
+import UiSelect from '@/components/ui/Select.vue'
+import UiButton from '@/components/ui/Button.vue'
+
+const mediaTypeOptions = [
+  { value: 'image', label: 'Image' },
+  { value: 'video', label: 'Video (mp4)' },
+]
 
 const banner = ref<Banner | null>(null)
 const loading = ref(true)

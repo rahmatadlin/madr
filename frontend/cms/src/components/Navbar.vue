@@ -5,11 +5,12 @@
       aria-label="Menu"
       @click="$emit('menu-click')"
     >
-      <span class="w-5 h-5 block border border-current rounded"></span>
+      <Bars3Icon class="h-6 w-6" />
     </button>
     <span class="ml-2 text-sm text-gray-600">Masjid CMS</span>
   </header>
 </template>
 <script setup lang="ts">
+import { Bars3Icon } from '@heroicons/vue/24/outline'
 defineEmits<{ 'menu-click': [] }>()
 </script>

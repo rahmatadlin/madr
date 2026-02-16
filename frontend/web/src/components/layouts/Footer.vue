@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4 py-12">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <h3 class="text-white text-lg font-semibold mb-4">Masjid Al-Madr</h3>
+          <h3 class="text-white text-lg font-semibold mb-4">
+            Masjid Agung Discovery Residence
+          </h3>
           <p class="text-sm mb-4">
             Pusat kegiatan keagamaan dan sosial masyarakat yang berkomitmen
             untuk membangun komunitas yang harmonis dan berkualitas.
@@ -13,18 +15,16 @@
           <h3 class="text-white text-lg font-semibold mb-4">Kontak</h3>
           <ul class="space-y-3 text-sm">
             <li class="flex items-start gap-2">
-              <span class="inline-block w-5 h-5 rounded bg-gray-700 flex-shrink-0" />
-              Jl. Masjid Raya No. 123, Jakarta Selatan
+              <MapPinIcon class="h-5 w-5 shrink-0 mt-0.5" />
+              <span>Jl. Masjid Raya No. 123, Jakarta Selatan</span>
             </li>
             <li class="flex items-center gap-2">
-              <span class="inline-block w-5 h-5 rounded bg-gray-700 flex-shrink-0" />
+              <PhoneIcon class="h-5 w-5 shrink-0" />
               <a href="tel:+62123456789" class="hover:text-white">+62 123 456 789</a>
             </li>
             <li class="flex items-center gap-2">
-              <span class="inline-block w-5 h-5 rounded bg-gray-700 flex-shrink-0" />
-              <a href="mailto:info@masjidalmadr.com" class="hover:text-white"
-                >info@masjidalmadr.com</a
-              >
+              <EnvelopeIcon class="h-5 w-5 shrink-0" />
+              <a href="mailto:info@masjidalmadr.com" class="hover:text-white">info@masjidalmadr.com</a>
             </li>
           </ul>
         </div>
@@ -37,12 +37,16 @@
               >
             </li>
             <li>
-              <router-link to="/donate" class="hover:text-white transition-colors"
+              <router-link
+                to="/donate"
+                class="hover:text-white transition-colors"
                 >Donasi</router-link
               >
             </li>
             <li>
-              <router-link to="/contact" class="hover:text-white transition-colors"
+              <router-link
+                to="/contact"
+                class="hover:text-white transition-colors"
                 >Kontak</router-link
               >
             </li>
@@ -82,15 +86,25 @@
           rel="noopener noreferrer"
           class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors"
         >
+          <ChatBubbleLeftRightIcon class="h-5 w-5" />
           Hubungi via WhatsApp
         </a>
       </div>
       <div class="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
-        <p>&copy; {{ new Date().getFullYear() }} Masjid Al-Madr. All rights reserved.</p>
+        <p>
+          &copy; {{ new Date().getFullYear() }} Masjid Agung Discovery
+          Residence. All rights reserved.
+        </p>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
+import {
+  MapPinIcon,
+  PhoneIcon,
+  EnvelopeIcon,
+  ChatBubbleLeftRightIcon,
+} from '@heroicons/vue/24/outline'
 </script>

@@ -13,6 +13,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'banner', name: 'banner', component: () => import('@/views/BannerView.vue') },
       { path: 'about', name: 'about', component: () => import('@/views/AboutView.vue') },
       { path: 'events', name: 'events', component: () => import('@/views/EventsView.vue') },
+      { path: 'kajian', name: 'kajian', component: () => import('@/views/KajianView.vue') },
       { path: 'gallery', name: 'gallery', component: () => import('@/views/GalleryView.vue') },
       { path: 'donations', name: 'donations', component: () => import('@/views/DonationsView.vue') },
     ],
